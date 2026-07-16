@@ -95,12 +95,38 @@ def _run_one(args, task_id: str) -> dict:
     return result
 
 
-def probe(args) -> None:
+def _assert_completed_probe(args, task_id: str) -> dict:
+    destination = _completion(args.output, task_id)
+    if not destination.exists():
+        raise RuntimeError(f"probe completion is missing: {task_id}")
+    result = json.loads(destination.read_text("utf-8"))
+    verdicts = (
+        result.get("traceverdict_verdict"),
+        result.get("official_raw_resolved"),
+        result.get("official_aggregate_resolved"),
+    )
+    if verdicts[0] is None or len(set(verdicts)) != 1:
+        raise RuntimeError(f"probe three-way verdict mismatch: {task_id}: {verdicts}")
+    if result.get("trace_complete") is not True:
+        raise RuntimeError(f"probe trace is incomplete: {task_id}")
+    if not isinstance(result.get("cost_usd"), (int, float)) or result["cost_usd"] <= 0:
+        raise RuntimeError(f"probe has no audited positive cost: {task_id}")
+    return result
+
+
+def probe_one(args) -> None:
+    task_id = args.instance_id
+    position = PROBE_TASKS.index(task_id)
+    for preceding in PROBE_TASKS[:position]:
+        _assert_completed_probe(args, preceding)
+    result = _run_one(args, task_id)
+    _assert_completed_probe(args, task_id)
+    print(json.dumps(result, indent=2))
+
+
+def gate_probes(args) -> None:
     for task_id in PROBE_TASKS:
-        destination = _completion(args.output, task_id)
-        if destination.exists():
-            continue
-        _run_one(args, task_id)
+        _assert_completed_probe(args, task_id)
     reuse = assert_probe_reuse_identity(
         db_path=args.db, output=args.output, task_set=args.task_set
     )
@@ -207,8 +233,11 @@ def parser() -> argparse.ArgumentParser:
     s.add_argument("--m3-db", type=Path, required=True)
     s.add_argument("--m3-output", type=Path, required=True)
     s.set_defaults(func=seed)
-    p = sub.add_parser("probe")
-    p.set_defaults(func=probe)
+    p = sub.add_parser("probe-one")
+    p.add_argument("--instance-id", choices=PROBE_TASKS, required=True)
+    p.set_defaults(func=probe_one)
+    g = sub.add_parser("gate-probes")
+    g.set_defaults(func=gate_probes)
     f = sub.add_parser("formal")
     f.set_defaults(func=formal)
     z = sub.add_parser("finalize")

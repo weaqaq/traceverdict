@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
+import subprocess
+import sys
 from decimal import Decimal
 from pathlib import Path
 
@@ -89,3 +92,27 @@ def test_kimi3_dormant_identity_rejects_preview_and_unofficial_ids():
         assert_kimi3_stable_identity("kimi-3", official_ids=set())
     assert_kimi3_stable_identity("kimi-3", official_ids={"kimi-3"}) is None
     assert POSITIONING == "同厂跨档对比，回答 harness 结论是否随被试能力档位稳健。"
+
+
+def test_m4s_probe_cli_requires_one_explicit_frozen_task():
+    env = dict(os.environ, PYTHONPATH=str(ROOT / "src"))
+    result = subprocess.run(
+        [sys.executable, "scripts/run_m4s.py", "probe-one", "--help"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+        env=env,
+    )
+    assert "--instance-id" in result.stdout
+    assert "pytest-dev__pytest-7982" in result.stdout
+    root_help = subprocess.run(
+        [sys.executable, "scripts/run_m4s.py", "--help"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+        env=env,
+    ).stdout
+    assert "gate-probes" in root_help
+    assert "{seed,probe,formal" not in root_help
