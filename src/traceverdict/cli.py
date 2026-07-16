@@ -73,6 +73,11 @@ def compare(
     task_set: Path = typer.Option(Path("tasks/self/task_set.txt"), "--task-set"),
     db: Path = typer.Option(Path("reports/traceverdict.db"), "--db"),
     taxonomy_overrides: Optional[Path] = typer.Option(None, "--taxonomy-overrides"),
+    allow_asymmetric_repetitions: bool = typer.Option(
+        False,
+        "--allow-asymmetric-repetitions",
+        help="Explicitly permit unequal per-task k; both sides are disclosed",
+    ),
 ) -> None:
     """Compare two configs on an explicit frozen task set."""
     from traceverdict.compare import compare_configs
@@ -83,6 +88,7 @@ def compare(
         task_set,
         db_path=db,
         taxonomy_overrides_path=taxonomy_overrides,
+        allow_asymmetric_repetitions=allow_asymmetric_repetitions,
     )
     typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
 

@@ -164,6 +164,7 @@ def compare_configs(
     *,
     db_path: str | Path = "reports/traceverdict.db",
     taxonomy_overrides_path: str | Path | None = None,
+    allow_asymmetric_repetitions: bool = False,
 ) -> dict[str, Any]:
     task_ids, task_set_sha = load_task_set(task_set_path)
     conn = dbmod._connect(db_path)
@@ -171,7 +172,10 @@ def compare_configs(
         baseline_runs = _load_config_runs(conn, baseline_config, task_ids)
         candidate_runs = _load_config_runs(conn, candidate_config, task_ids)
         for task_id in task_ids:
-            if len(baseline_runs[task_id]) != len(candidate_runs[task_id]):
+            if (
+                not allow_asymmetric_repetitions
+                and len(baseline_runs[task_id]) != len(candidate_runs[task_id])
+            ):
                 raise ValueError(f"repetition count mismatch for task {task_id}")
         baseline = _task_metrics(baseline_runs)
         candidate = _task_metrics(candidate_runs)
@@ -226,10 +230,20 @@ def compare_configs(
         taxonomy = summarize_failures(
             conn, failed_candidate_runs, load_overrides(taxonomy_overrides_path)
         )
+        baseline_repetitions = {t: len(baseline_runs[t]) for t in task_ids}
+        candidate_repetitions = {t: len(candidate_runs[t]) for t in task_ids}
+        asymmetric = baseline_repetitions != candidate_repetitions
         stats = {
             "task_ids": task_ids,
             "task_count": len(task_ids),
-            "repetitions": {t: len(baseline_runs[t]) for t in task_ids},
+            # Retained for pre-M4 stats_json readers; this describes baseline.
+            "repetitions": baseline_repetitions,
+            "baseline_repetitions": baseline_repetitions,
+            "candidate_repetitions": candidate_repetitions,
+            "comparison_mode": "asymmetric" if asymmetric else "symmetric",
+            "asymmetric_repetitions_authorized": bool(
+                allow_asymmetric_repetitions
+            ),
             "delta_pass": delta_pass,
             "bootstrap": {"resamples": BOOTSTRAP_RESAMPLES, "seed": BOOTSTRAP_SEED, "ci95": [ci_low, ci_high]},
             "mcnemar": mcnemar,

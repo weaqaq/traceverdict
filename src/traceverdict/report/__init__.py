@@ -44,6 +44,9 @@ def generate_report(
     stats = json.loads(row["stats_json"])
     m = stats["mcnemar"]
     ci = stats["bootstrap"]["ci95"]
+    baseline_repetitions = stats.get("baseline_repetitions", stats["repetitions"])
+    candidate_repetitions = stats.get("candidate_repetitions", stats["repetitions"])
+    mode = stats.get("comparison_mode", "symmetric")
 
     table = Table(title=f"TraceVerdict comparison {comparison_id}")
     table.add_column("Metric")
@@ -52,6 +55,13 @@ def generate_report(
     table.add_row("Candidate", row["candidate_config"])
     table.add_row("Task set SHA256", row["task_set_sha"])
     table.add_row("Tasks", str(stats["task_count"]))
+    table.add_row("Comparison mode", mode)
+    table.add_row(
+        "Baseline repetitions", json.dumps(baseline_repetitions, sort_keys=True)
+    )
+    table.add_row(
+        "Candidate repetitions", json.dumps(candidate_repetitions, sort_keys=True)
+    )
     table.add_row("Delta pass", _fmt(stats["delta_pass"]))
     table.add_row("Bootstrap 95% CI", f"[{_fmt(ci[0])}, {_fmt(ci[1])}]")
     table.add_row("McNemar p", _fmt(m["p_value"]))
@@ -64,13 +74,27 @@ def generate_report(
 
     output = Path(output_path) if output_path else Path("reports") / f"{comparison_id}.md"
     output.parent.mkdir(parents=True, exist_ok=True)
+    asymmetry_note = (
+        "Per-task metrics average each side independently. The paired bootstrap "
+        "therefore compares candidate k=1 values with baseline k=2 means. "
+        "Baseline 1/2 no-majority tasks are excluded from McNemar and listed "
+        "below. This low-resolution asymmetric design is not a leaderboard or "
+        "a general model-ranking claim."
+        if mode == "asymmetric"
+        else "Both sides use equal per-task repetition counts."
+    )
     markdown = f"""# TraceVerdict comparison `{comparison_id}`
 
 - Baseline: `{row['baseline_config']}`
 - Candidate: `{row['candidate_config']}`
 - Task set SHA256: `{row['task_set_sha']}`
-- Tasks: {stats['task_count']}; repetitions: `{json.dumps(stats['repetitions'], sort_keys=True)}`
+- Tasks: {stats['task_count']}
+- Comparison mode: `{mode}`
+- Baseline repetitions: `{json.dumps(baseline_repetitions, sort_keys=True)}`
+- Candidate repetitions: `{json.dumps(candidate_repetitions, sort_keys=True)}`
 - Alarm: **{row['alarm']}**
+
+> {asymmetry_note}
 
 ## Paired pass statistics
 
