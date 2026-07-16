@@ -1,0 +1,22 @@
+config_id: m3-swe-agent-1-1-0-deepseek-v4-flash-thinking-v7
+agent_name: swe-agent
+agent_version: "1.1.0"
+model_name: openai/deepseek-v4-flash
+model_params:
+  thinking:
+    type: enabled
+  completion_kwargs:
+    timeout: 180
+  retry:
+    retries: 1
+    min_wait: 1
+    max_wait: 1
+prompt_version: m3-exp-c-v1
+harness_version: "0.1.0"
+notes: D19-i Exp-C immutable identity v7; parent_config_id=m3-swe-agent-1-1-0-deepseek-v4-flash-thinking-v6; v6 zero-model preflight proved the derived image lacked swerex-remote and the official unpinned pipx fallback exceeded 300s before any model call; v7 bakes swe-rex==1.2.1, matching the pinned host runtime, into suite-owned traceverdict/self-base:swe-agent-1.1.0-v3; request timeout, one-attempt retry, journals, tasks, model, thinking and verifier identity remain v6; verifier remains traceverdict/self-base:py3.12-v1; swe-agent=1.1.0 tag=v1.1.0 commit=0f3acafacabc0def8cc76b4e48acb4b6cf302cb9; scope=self-S1-S8; no-model-comparison-claim
+store_prompt_full: false
+litellm_model_registry: litellm_models.json
+container_cwd: /testbed
+base_image: python:3.12-slim
+local_image_tag: traceverdict/self-base:swe-agent-1.1.0-v3
+suite_dockerfile: SWEAgentV3.Dockerfile

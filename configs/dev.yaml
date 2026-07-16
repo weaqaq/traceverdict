@@ -1,0 +1,15 @@
+config_id: dev-deepseek-v4-flash-v2
+agent_name: mini-swe-agent
+agent_version: "2.4.5"
+model_name: openai/deepseek-v4-flash
+model_params:
+  thinking:
+    type: enabled
+prompt_version: v0
+harness_version: "0.1.0"
+notes: T3 dev config; thinking=enabled; pricing=deepseek-v4-flash@2026-07-10:84d35ece5b4e8374f18c5ab552cd7b176c87fe876d735fcee318bde3def52b68
+store_prompt_full: false
+litellm_model_registry: litellm_models.json
+container_cwd: /testbed
+base_image: python:3.12-slim
+local_image_tag: traceverdict/self-base:py3.12-v1

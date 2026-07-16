@@ -1,0 +1,10 @@
+{
+  "distribution": "sweagent",
+  "version": "1.1.0",
+  "source": "https://github.com/SWE-agent/SWE-agent.git",
+  "tag": "v1.1.0",
+  "commit": "0f3acafacabc0def8cc76b4e48acb4b6cf302cb9",
+  "swe_rex_version": "1.2.1",
+  "installation": "clone source, checkout 0f3acafacabc0def8cc76b4e48acb4b6cf302cb9, then pip install -e <source-root>",
+  "note": "PyPI does not publish the official 1.1.0 distribution; tag and commit are the immutable identity."
+}

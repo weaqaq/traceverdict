@@ -1,0 +1,1 @@
+This fixture is pure WSGI. The correct HTTPX 0.28.1 repair is `httpx.WSGITransport(app=application)` passed as `transport=` to synchronous `httpx.Client`. Do not convert the application or client to an asynchronous stack. Run `pytest -q`.

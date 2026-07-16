@@ -1,0 +1,20 @@
+{
+  "verified_at": "2026-07-13",
+  "source_usd": "https://platform.kimi.ai/docs/pricing/chat-k25",
+  "source_cny": "https://platform.kimi.com/docs/pricing/chat-k25",
+  "model": "kimi-k2.5",
+  "endpoint_model_verified": true,
+  "context_length": 262144,
+  "prices_usd_per_token": {
+    "cache_hit_input": 1e-7,
+    "cache_miss_input": 6e-7,
+    "output": 3e-6
+  },
+  "prices_cny_per_million_tokens": {
+    "cache_hit_input": 0.70,
+    "cache_miss_input": 4.00,
+    "output": 21.00
+  },
+  "registry_sha256": "38c8a2ac795972efe6d043e6cc36f7ab40549c355944cb9e26202748fe08e868",
+  "probe_policy": "one synthetic multi-turn tool call, then one SWE-bench task; no 32-run arm before review"
+}

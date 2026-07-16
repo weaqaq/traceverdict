@@ -1,0 +1,3 @@
+* text=auto eol=lf
+*.bundle binary
+src/traceverdict/tracer/schema.sql -text -eol

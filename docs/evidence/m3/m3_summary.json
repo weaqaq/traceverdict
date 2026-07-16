@@ -1,0 +1,46 @@
+{
+  "schema": "traceverdict-public-m3-summary-1",
+  "task_set_sha256": "eeb30802a00dd865cfc7214dc6ab123f267f1f92b9e5d3a4d21869bf4fb152be",
+  "new_paid_runs": 85,
+  "experiments": {
+    "exp_a": {
+      "tasks": 16,
+      "k": 2,
+      "delta_pass": -0.09375,
+      "bootstrap_ci_95": [-0.21875, 0.03125],
+      "mcnemar_exact_p": 1.0,
+      "excluded_ties": 5,
+      "alarm": "warn",
+      "direction_stable": false,
+      "interpretation": "paired pipeline evidence; not a broad model ranking"
+    },
+    "exp_b": {
+      "tasks": 16,
+      "k": 2,
+      "delta_pass": -0.3125,
+      "bootstrap_ci_95": [-0.5, -0.125],
+      "mcnemar_exact_p": 0.25,
+      "alarm": "hard",
+      "direction_stable": true,
+      "agent_ro_verifier_rw_records": 32
+    },
+    "exp_c": {
+      "tasks": 8,
+      "complete_traces": 8,
+      "rule_passes": 1,
+      "scope": "adapter and evidence compatibility only"
+    }
+  },
+  "cost_usd": {
+    "m3_new_runs": "1.0413933564",
+    "project_cumulative": "1.862793712251148854773092867",
+    "tripwire": "28"
+  },
+  "private_only": [
+    "databases",
+    "full trajectories and prompts",
+    "provider logs",
+    "host paths",
+    "per-run artifact manifests"
+  ]
+}

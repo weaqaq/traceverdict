@@ -1,0 +1,41 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  public-safety-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install package
+        run: pip install -e .
+
+      - name: Install pinned mini-swe-agent
+        run: pip install "mini-swe-agent==2.4.5"
+
+      - name: Scan public tree, bundles, and Git objects
+        run: python scripts/check_public_safety.py --git-objects
+
+      - name: Verify Markdown links
+        run: python scripts/check_links.py
+
+      - name: Verify seven-command CLI
+        run: python scripts/check_cli_contract.py
+
+      - name: Run public test suite
+        run: pytest -q

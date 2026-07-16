@@ -1,0 +1,24 @@
+id: S8
+suite: self
+source: self
+repo_ref: repo.bundle
+base_commit: 18ce2dee3d7aa656b2b18bfe4e744853717a3db1
+image_ref: "traceverdict/self-base:py3.12-v1"
+instruction: Customer codes that look equivalent are producing duplicate accounts. Make code normalization match the intended product behavior. Do not modify tests.
+budget:
+  max_steps: 30
+  max_tokens: 100000
+  max_wall_s: 600
+  max_cost_usd: 1.0
+forbidden_paths: []
+gt:
+  type: pytest
+  spec:
+    fail_to_pass:
+      - "tests/test_customer.py::test_equivalent_codes"
+      - "tests/test_customer.py::test_preserve_alphanumerics"
+    judge_dimension: intent
+tags:
+  - ambiguous_issue
+  - intent_judge
+  - fail_to_pass

@@ -1,0 +1,27 @@
+{
+  "verified_at": "2026-07-13",
+  "pricing_source": "https://help.aliyun.com/zh/maxcompute/product-overview/token-fee",
+  "fx_source": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
+  "model": "qwen3.6-flash",
+  "context_length": 1048576,
+  "registry_pricing_tier_max_input_tokens": 262144,
+  "prices_cny_per_million_tokens": {
+    "cache_hit_input": 0.288,
+    "cache_miss_input": 1.44,
+    "output_including_reasoning": 8.64
+  },
+  "fx_2026_07_10": {
+    "usd_per_eur": 1.1430,
+    "cny_per_eur": 7.7433,
+    "usd_per_cny": 0.14761148347603735
+  },
+  "prices_usd_per_token": {
+    "cache_hit_input": 4.2512107241098756e-8,
+    "cache_miss_input": 2.1256053620549378e-7,
+    "output_including_reasoning": 1.2753632172329627e-6,
+    "additional_reasoning_charge": 0.0
+  },
+  "usage_semantics": "completion_tokens already includes completion_tokens_details.reasoning_tokens because total_tokens equals prompt_tokens plus completion_tokens; the zero additional reasoning rate prevents LiteLLM 1.91.1 from double counting the subset",
+  "evidence_run": "run-7f8bb5eb6648",
+  "registry_sha256": "f8d2eea7169df06fc1a9e2cd7eec2e12e69d876debbda20de4aec69137022e71"
+}

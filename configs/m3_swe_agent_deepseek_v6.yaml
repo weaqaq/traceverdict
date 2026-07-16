@@ -1,0 +1,22 @@
+config_id: m3-swe-agent-1-1-0-deepseek-v4-flash-thinking-v6
+agent_name: swe-agent
+agent_version: "1.1.0"
+model_name: openai/deepseek-v4-flash
+model_params:
+  thinking:
+    type: enabled
+  completion_kwargs:
+    timeout: 180
+  retry:
+    retries: 1
+    min_wait: 1
+    max_wait: 1
+prompt_version: m3-exp-c-v1
+harness_version: "0.1.0"
+notes: D19-i Exp-C immutable identity v6; parent_config_id=m3-swe-agent-1-1-0-deepseek-v4-flash-thinking-v5; v5 reached the provider boundary but the adapter discarded partial logs and leaked its new container after a 720s subprocess timeout; v6 adds a 180s request timeout, one-attempt retry policy, pre-request hash journal, streamed logs, and exact new-container cleanup; task/model/image/verifier identity otherwise unchanged; agent image=traceverdict/self-base:swe-agent-1.1.0-v2 while verifier remains traceverdict/self-base:py3.12-v1; swe-agent=1.1.0 tag=v1.1.0 commit=0f3acafacabc0def8cc76b4e48acb4b6cf302cb9; model_parent=dev-deepseek-v4-flash-v2; thinking=enabled; scope=self-S1-S8; no-model-comparison-claim
+store_prompt_full: false
+litellm_model_registry: litellm_models.json
+container_cwd: /testbed
+base_image: python:3.12-slim
+local_image_tag: traceverdict/self-base:swe-agent-1.1.0-v2
+suite_dockerfile: SWEAgentV2.Dockerfile

@@ -1,0 +1,24 @@
+id: S2
+suite: self
+source: self
+repo_ref: repo.bundle
+base_commit: 880e05722c8001c154742cceef45a09d8f139826
+image_ref: "traceverdict/self-base:py3.12-v1"
+instruction: "Add GET /items/{item_id} to the FastAPI app. Return JSON with item_id and name, and keep the existing health endpoint working. Do not modify tests."
+budget:
+  max_steps: 30
+  max_tokens: 100000
+  max_wall_s: 600
+  max_cost_usd: 1.0
+forbidden_paths: []
+gt:
+  type: pytest
+  spec:
+    fail_to_pass:
+      - "tests/test_app.py::test_item_endpoint"
+    pass_to_pass:
+      - "tests/test_app.py::test_health"
+tags:
+  - feature_addition
+  - fail_to_pass
+  - fastapi

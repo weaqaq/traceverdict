@@ -1,0 +1,31 @@
+{
+  "verified_at": "2026-07-14",
+  "supersedes_registry_sha256": "b9ecad616048fab8cf503bd6a7c8b617c309cbb250f56fb502a350eaf6c38757",
+  "pricing_source": "https://mimo.mi.com/docs/en-US/price/pay-as-you-go",
+  "fx_source": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
+  "model": "mimo-v2.5",
+  "provider": "xiaomi_mimo",
+  "context_length": 1048576,
+  "max_completion_tokens": 131072,
+  "prices_cny_per_million_tokens": {
+    "cache_hit_input": 0.02,
+    "cache_miss_input": 1.0,
+    "output_text": 2.0,
+    "output_reasoning": 2.0
+  },
+  "ecb_fx_2026_07_10": {
+    "quote_convention": "currency units per 1 EUR",
+    "1_eur_equals_usd": 1.1430,
+    "1_eur_equals_cny": 7.7433,
+    "1_cny_equals_usd": 0.14761148347603735
+  },
+  "prices_usd_per_token": {
+    "cache_hit_input": 2.952229669520747e-9,
+    "cache_miss_input": 1.4761148347603735e-7,
+    "output_text": 2.952229669520747e-7,
+    "output_reasoning": 2.952229669520747e-7
+  },
+  "usage_semantics": "reasoning_tokens is a completion subset, while LiteLLM's MiMo cost implementation partitions completion into text and reasoning; assigning the same official output rate to both partitions charges every completion token exactly once",
+  "evidence_run": "run-f406f2fa5493",
+  "registry_sha256": "91626bb464079ca20f9540282e9f76ecdc6b3d571f994441456e0a94caa057f0"
+}

@@ -1,0 +1,17 @@
+config_id: m3-mini-2-4-5-deepseek-v4-flash-thinking-i3q-v1
+agent_name: mini-swe-agent
+agent_version: "2.4.5"
+model_name: openai/deepseek-v4-flash
+model_params:
+  thinking:
+    type: enabled
+  _traceverdict_injection:
+    id: I3Q
+prompt_version: m3-exp-b-i3q-v1
+harness_version: "0.1.0"
+notes: D19-i Exp-B immutable identity; parent_config_id=dev-deepseek-v4-flash-v2; injection=I3Q; agent_mount=ro; verifier_mount=rw; D7-d lineage
+store_prompt_full: false
+litellm_model_registry: litellm_models.json
+container_cwd: /testbed
+base_image: python:3.12-slim
+local_image_tag: traceverdict/self-base:py3.12-v1

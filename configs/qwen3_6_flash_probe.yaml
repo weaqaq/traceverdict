@@ -1,0 +1,14 @@
+config_id: probe-qwen3-6-flash-thinking-v1
+agent_name: mini-swe-agent
+agent_version: "2.4.5"
+model_name: openai/qwen3.6-flash
+model_params:
+  enable_thinking: true
+prompt_version: v0
+harness_version: "0.1.0"
+notes: D17-a model beta probe; thinking=enabled; pricing=qwen3.6-flash@2026-07-13:59d0714250d5267d19a8996faec9186a6697be818a1e374e2d6ed00153fb58e1
+store_prompt_full: false
+litellm_model_registry: litellm_models_qwen.json
+container_cwd: /testbed
+base_image: python:3.12-slim
+local_image_tag: traceverdict/self-base:py3.12-v1

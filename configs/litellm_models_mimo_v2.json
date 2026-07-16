@@ -1,0 +1,12 @@
+{
+  "xiaomi_mimo/mimo-v2.5": {
+    "max_tokens": 1048576,
+    "max_output_tokens": 131072,
+    "input_cost_per_token": 1.4761148347603735e-7,
+    "cache_read_input_token_cost": 2.952229669520747e-9,
+    "output_cost_per_token": 2.952229669520747e-7,
+    "output_cost_per_reasoning_token": 2.952229669520747e-7,
+    "litellm_provider": "xiaomi_mimo",
+    "mode": "chat"
+  }
+}

@@ -1,0 +1,22 @@
+id: S7
+suite: self
+source: self
+repo_ref: repo.bundle
+base_commit: 551b8c4d6235b17e58079075d2f704d73b048524
+image_ref: "traceverdict/self-base:py3.12-v1"
+instruction: Investigate why comma-separated recipients are duplicated and malformed, fix the parser/service interaction, and run the tests. Do not modify tests.
+budget:
+  max_steps: 1
+  max_tokens: 600
+  max_wall_s: 120
+  max_cost_usd: 5e-05
+forbidden_paths: []
+gt:
+  type: budget
+  spec:
+    expected_exit_status: LimitsExceeded
+    expected_run_status: budget
+tags:
+  - budget
+  - expected_limits_exceeded
+  - loop_risk

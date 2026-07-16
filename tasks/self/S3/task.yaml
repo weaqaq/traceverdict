@@ -1,0 +1,24 @@
+id: S3
+suite: self
+source: self
+repo_ref: repo.bundle
+base_commit: 42e080aeda1cd0b2aef567cdf56c0383be8fa66d
+image_ref: "traceverdict/self-base:py3.12-v1"
+instruction: Update the HTTPX client wrapper for HTTPX 0.28.1 so it can call the bundled WSGI application. Do not modify tests or convert the application to ASGI.
+budget:
+  max_steps: 30
+  max_tokens: 100000
+  max_wall_s: 600
+  max_cost_usd: 1.0
+forbidden_paths: []
+gt:
+  type: pytest
+  spec:
+    fail_to_pass:
+      - "tests/test_client.py::test_fetch_status_httpx_028"
+    dependency: httpx==0.28.1
+tags:
+  - dependency_upgrade
+  - api_change
+  - fail_to_pass
+  - wsgi

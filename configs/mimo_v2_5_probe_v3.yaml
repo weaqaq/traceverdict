@@ -1,0 +1,23 @@
+config_id: probe-mimo-v2-5-thinking-v3
+agent_name: mini-swe-agent
+agent_version: "2.4.5"
+model_name: xiaomi_mimo/mimo-v2.5
+model_params:
+  thinking:
+    type: enabled
+  # Official thinking-mode effective/recommended values:
+  # https://mimo.mi.com/docs/en-US/api/guidance/model-hyperparameters
+  temperature: 1.0
+  top_p: 0.95
+  max_completion_tokens: 131072
+  allowed_openai_params:
+    - tools
+    - tool_choice
+prompt_version: v0
+harness_version: "0.1.0"
+notes: D19-f MiMo beta probe; thinking=enabled; tools=official-allowlist; reasoning=completion-partition-priced-once; context=1048576; pricing=mimo-v2.5@2026-07-14:91626bb464079ca20f9540282e9f76ecdc6b3d571f994441456e0a94caa057f0
+store_prompt_full: false
+litellm_model_registry: litellm_models_mimo_v2.json
+container_cwd: /testbed
+base_image: python:3.12-slim
+local_image_tag: traceverdict/self-base:py3.12-v1

@@ -1,0 +1,12 @@
+{
+  "verified_at": "2026-07-10",
+  "source": "https://api-docs.deepseek.com/quick_start/pricing",
+  "model": "deepseek-v4-flash",
+  "prices_usd_per_token": {
+    "cache_hit_input": 2.8e-9,
+    "cache_miss_input": 1.4e-7,
+    "output": 2.8e-7
+  },
+  "registry_sha256": "84d35ece5b4e8374f18c5ab552cd7b176c87fe876d735fcee318bde3def52b68",
+  "revalidate_before": "M2 cost probe"
+}
