@@ -239,3 +239,34 @@ def test_asymmetric_repetitions_require_explicit_flag_and_disclose_both_sides(
     text = report.read_text("utf-8")
     assert "Comparison mode: `asymmetric`" in text
     assert "Baseline 1/2 no-majority tasks" in text
+
+
+def test_unpriced_candidate_requires_explicit_subscription_identity(tmp_path: Path):
+    db = tmp_path / "traceverdict.db"
+    _seed_comparison_db(db)
+    import sqlite3
+
+    conn = sqlite3.connect(db)
+    conn.execute("UPDATE run SET cost_usd=NULL WHERE config_id='candidate'")
+    conn.commit()
+    conn.close()
+    task_set = tmp_path / "tasks.txt"
+    task_set.write_text("".join(f"S{i}\n" for i in range(1, 9)), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing metric"):
+        compare_configs("base", "candidate", task_set, db_path=db)
+    with pytest.raises(ValueError, match="billing_mode"):
+        compare_configs(
+            "base", "candidate", task_set, db_path=db, allow_unpriced_candidate=True
+        )
+    conn = sqlite3.connect(db)
+    conn.execute(
+        "UPDATE config SET model_params_json=? WHERE config_id='candidate'",
+        (json.dumps({"billing_mode": "subscription_unallocatable"}),),
+    )
+    conn.commit()
+    conn.close()
+    result = compare_configs(
+        "base", "candidate", task_set, db_path=db, allow_unpriced_candidate=True
+    )
+    assert result["stats"]["cost"]["status"] == "unavailable"
+    assert result["stats"]["cost"]["shadow_cost_is_report_only"] is True
