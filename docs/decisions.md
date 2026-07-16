@@ -20,6 +20,7 @@
 | D19 | 2026-07-14 | Select MiMo V2.5 as the cross-provider candidate; correct currency conversion provenance; version the provider cost registry after F-5; authorize M3 only after strict reconciliation. |
 | D20 | 2026-07-15 | Run M3 in three bounded arms: paired provider comparison, known I3Q regression, and second-agent compatibility; prohibit model-ranking claims from the compatibility arm. |
 | D21 | 2026-07-16 | Publish TraceVerdict as a clean MIT-licensed mirror with a single genuine root release commit; keep the complete development history and raw evidence private. |
+| D22 | 2026-07-16 | Authorize M4-S as a same-provider cross-tier robustness arm: DeepSeek V4 Pro uses explicit thinking mode, mirrors the frozen Flash request by intentionally omitting reasoning-effort and sampling parameters, gates a three-task probe against a conservative 19-run projection, then runs 16 tasks at k=1 (or the pre-registered first 12 before abandonment). Flash k=2 versus Pro k=1 is permitted only through an explicit asymmetric-comparison mode with baseline ties listed and excluded from McNemar. Kimi-3 remains dormant until an exact stable official model identity and auditable price exist. |
 
 ## Frozen governance rules
 
