@@ -1,0 +1,52 @@
+config_id: m4c-codex-0-144-4-gpt-5-6-luna-high-subscription-v1
+agent_name: codex
+agent_version: "0.144.4"
+model_name: gpt-5.6-luna
+model_params:
+  auth_mode: chatgpt_subscription
+  billing_mode: subscription_unallocatable
+  model_reasoning_effort: high
+  approval_policy: never
+  sandbox_mode: workspace-write
+  sandbox_workspace_write:
+    network_access: true
+  web_search: disabled
+  history:
+    persistence: none
+  hide_agent_reasoning: false
+  features:
+    shell_tool: true
+    shell_snapshot: false
+  ephemeral: true
+  ignore_user_config: true
+  ignore_rules: true
+  concurrency: 1
+  service_tier: omitted
+  temperature: omitted
+  top_p: omitted
+  network_mode: bridge
+  container_cap_add: SYS_ADMIN
+  container_seccomp: unconfined
+  inner_sandbox: workspace-write
+  codex_release_url: https://github.com/openai/codex/releases/download/rust-v0.144.4/codex-x86_64-unknown-linux-musl.tar.gz
+  codex_archive_sha256: 37c985be9d89e8c4f43b3aa0594c1213eac212d30ae2b95221f08fec807515d1
+  codex_binary_sha256: 2b3edc9cdfd1717fba3dbc92817205a8a2c7511d459e456d4817eeff6f78ed7a
+  codex_bwrap_release_url: https://github.com/openai/codex/releases/download/rust-v0.144.4/bwrap-x86_64-unknown-linux-musl.tar.gz
+  codex_bwrap_archive_sha256: bf821348773e12a8c10b901759679824d0bb96482c9fcf2cc1eb6f866ec614d7
+  codex_bwrap_binary_sha256: 77360cb751ccedc5971391444ac86a8a33c15b04d6b4a6fe45f5d25496e62c4c
+  actual_cost_mode: subscription_unallocatable
+  shadow_cost_mode: api_equivalent_report_only
+  budget_enforcement:
+    max_wall_s: enforced_adapter_monotonic
+    max_steps: recorded-inert-for-codex
+    max_cost_usd: recorded-inert-for-codex
+    max_tokens: recorded-inert
+    tool_timeout_s: recorded-inert-for-codex
+prompt_version: v0
+harness_version: "0.1.0"
+notes: M4-C Codex compatibility arm; agent local only; credential never leaves local machine; SYS_ADMIN/seccomp-unconfined enable the pinned inner bwrap sandbox; agent layer added and official verifier image unchanged
+store_prompt_full: false
+litellm_model_registry: codex_shadow_prices.json
+container_cwd: /testbed
+base_image: python:3.12-slim
+local_image_tag: traceverdict/codex-agent:0.144.4
