@@ -8,6 +8,7 @@ import hashlib
 import json
 import sqlite3
 from pathlib import Path
+from pathlib import PureWindowsPath
 
 from traceverdict.core.config_loader import load_config
 from traceverdict.core.runner import run_task
@@ -49,9 +50,14 @@ def _rebase_artifact_paths(conn: sqlite3.Connection, artifacts: Path) -> int:
         current = Path(row["path"])
         if current.is_file():
             continue
-        candidate = artifacts / row["run_id"] / current.name
-        if current.parent.name == "adapter":
-            candidate = artifacts / row["run_id"] / "adapter" / current.name
+        stored = (
+            PureWindowsPath(row["path"])
+            if "\\" in row["path"]
+            else Path(row["path"])
+        )
+        candidate = artifacts / row["run_id"] / stored.name
+        if stored.parent.name == "adapter":
+            candidate = artifacts / row["run_id"] / "adapter" / stored.name
         if not candidate.is_file():
             continue
         actual = hashlib.sha256(candidate.read_bytes()).hexdigest()
