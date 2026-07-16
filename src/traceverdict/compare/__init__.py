@@ -92,7 +92,9 @@ def exact_mcnemar(baseline: dict[str, float], candidate: dict[str, float]) -> di
     return {**cells, "discordant": discordant, "p_value": p_value, "excluded_ties": sorted(ties)}
 
 
-def _load_config_runs(conn, config_id: str, task_ids: list[str]) -> dict[str, list[dict[str, Any]]]:
+def _load_config_runs(
+    conn, config_id: str, task_ids: list[str], *, allow_missing_cost: bool = False
+) -> dict[str, list[dict[str, Any]]]:
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
     placeholders = ",".join("?" for _ in task_ids)
     rows = conn.execute(
@@ -129,7 +131,10 @@ def _load_config_runs(conn, config_id: str, task_ids: list[str]) -> dict[str, li
         missing_verdicts = sorted(required - present)
         if missing_verdicts:
             raise ValueError(f"run {run['run_id']} missing rule verdicts: {missing_verdicts}")
-        if any(run[field] is None for field in ("tokens_in", "tokens_out", "cost_usd", "wall_time_s")):
+        required_metrics = ("tokens_in", "tokens_out", "wall_time_s")
+        if any(run[field] is None for field in required_metrics) or (
+            run["cost_usd"] is None and not allow_missing_cost
+        ):
             raise ValueError(f"run {run['run_id']} has missing metric")
         run["passed"] = int(all(v["passed"] == 1 for v in verdicts))
         run["forbidden_failed"] = any(v["name"] == "forbidden" and v["passed"] != 1 for v in verdicts)
@@ -144,13 +149,19 @@ def _load_config_runs(conn, config_id: str, task_ids: list[str]) -> dict[str, li
     return grouped
 
 
-def _task_metrics(grouped: dict[str, list[dict[str, Any]]]) -> dict[str, dict[str, float | bool]]:
+def _task_metrics(
+    grouped: dict[str, list[dict[str, Any]]], *, allow_missing_cost: bool = False
+) -> dict[str, dict[str, float | bool | None]]:
     result = {}
     for task_id, runs in grouped.items():
         result[task_id] = {
             "pass": sum(r["passed"] for r in runs) / len(runs),
             "tokens": sum(r["tokens_in"] + r["tokens_out"] for r in runs) / len(runs),
-            "cost": sum(r["cost_usd"] for r in runs) / len(runs),
+            "cost": (
+                None
+                if allow_missing_cost
+                else sum(r["cost_usd"] for r in runs) / len(runs)
+            ),
             "wall": sum(r["wall_time_s"] for r in runs) / len(runs),
             "forbidden_failed": any(r["forbidden_failed"] for r in runs),
         }
@@ -165,12 +176,31 @@ def compare_configs(
     db_path: str | Path = "reports/traceverdict.db",
     taxonomy_overrides_path: str | Path | None = None,
     allow_asymmetric_repetitions: bool = False,
+    allow_unpriced_candidate: bool = False,
 ) -> dict[str, Any]:
     task_ids, task_set_sha = load_task_set(task_set_path)
     conn = dbmod._connect(db_path)
     try:
+        if allow_unpriced_candidate:
+            candidate_row = conn.execute(
+                "SELECT model_params_json FROM config WHERE config_id=?",
+                (candidate_config,),
+            ).fetchone()
+            if candidate_row is None:
+                raise ValueError(f"unknown candidate config: {candidate_config}")
+            candidate_params = json.loads(candidate_row["model_params_json"])
+            if candidate_params.get("billing_mode") != "subscription_unallocatable":
+                raise ValueError(
+                    "--allow-unpriced-candidate requires "
+                    "billing_mode=subscription_unallocatable"
+                )
         baseline_runs = _load_config_runs(conn, baseline_config, task_ids)
-        candidate_runs = _load_config_runs(conn, candidate_config, task_ids)
+        candidate_runs = _load_config_runs(
+            conn,
+            candidate_config,
+            task_ids,
+            allow_missing_cost=allow_unpriced_candidate,
+        )
         for task_id in task_ids:
             if (
                 not allow_asymmetric_repetitions
@@ -178,7 +208,9 @@ def compare_configs(
             ):
                 raise ValueError(f"repetition count mismatch for task {task_id}")
         baseline = _task_metrics(baseline_runs)
-        candidate = _task_metrics(candidate_runs)
+        candidate = _task_metrics(
+            candidate_runs, allow_missing_cost=allow_unpriced_candidate
+        )
         bpass = {t: float(baseline[t]["pass"]) for t in task_ids}
         cpass = {t: float(candidate[t]["pass"]) for t in task_ids}
         deltas = [cpass[t] - bpass[t] for t in task_ids]
@@ -197,7 +229,16 @@ def compare_configs(
             }
 
         tokens = distribution("tokens")
-        cost = distribution("cost")
+        cost = (
+            {
+                "status": "unavailable",
+                "reason": "candidate_subscription_unallocatable",
+                "candidate_actual_cost_usd": None,
+                "shadow_cost_is_report_only": True,
+            }
+            if allow_unpriced_candidate
+            else distribution("cost")
+        )
         wall = distribution("wall")
         token_ratio = math.inf if tokens["baseline_median"] == 0 and tokens["candidate_median"] > 0 else (
             tokens["candidate_median"] / tokens["baseline_median"] if tokens["baseline_median"] else 1.0
@@ -244,6 +285,7 @@ def compare_configs(
             "asymmetric_repetitions_authorized": bool(
                 allow_asymmetric_repetitions
             ),
+            "unpriced_candidate_authorized": bool(allow_unpriced_candidate),
             "delta_pass": delta_pass,
             "bootstrap": {"resamples": BOOTSTRAP_RESAMPLES, "seed": BOOTSTRAP_SEED, "ci95": [ci_low, ci_high]},
             "mcnemar": mcnemar,

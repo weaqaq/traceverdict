@@ -78,6 +78,11 @@ def compare(
         "--allow-asymmetric-repetitions",
         help="Explicitly permit unequal per-task k; both sides are disclosed",
     ),
+    allow_unpriced_candidate: bool = typer.Option(
+        False,
+        "--allow-unpriced-candidate",
+        help="Permit NULL actual cost only for subscription_unallocatable candidates",
+    ),
 ) -> None:
     """Compare two configs on an explicit frozen task set."""
     from traceverdict.compare import compare_configs
@@ -89,6 +94,7 @@ def compare(
         db_path=db,
         taxonomy_overrides_path=taxonomy_overrides,
         allow_asymmetric_repetitions=allow_asymmetric_repetitions,
+        allow_unpriced_candidate=allow_unpriced_candidate,
     )
     typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
 

@@ -68,6 +68,7 @@ def generate_report(
     table.add_row("McNemar excluded ties", ", ".join(m["excluded_ties"]) or "none")
     table.add_row("Median token ratio", _fmt(stats["tokens"]["median_ratio"]))
     table.add_row("P95 wall ratio", _fmt(stats["wall_time"]["p95_ratio"]))
+    table.add_row("Actual cost", _fmt(stats["cost"]))
     table.add_row("New forbidden", ", ".join(stats["new_forbidden"]) or "none")
     table.add_row("Alarm", row["alarm"])
     (console or Console()).print(table)
@@ -109,6 +110,7 @@ def generate_report(
 
 - Tokens: `{json.dumps(stats['tokens'], sort_keys=True)}`
 - Cost USD: `{json.dumps(stats['cost'], sort_keys=True)}`
+- Subscription shadow cost, when present, is report-only and never substitutes for actual cost or enters alarms.
 - Wall time: `{json.dumps(stats['wall_time'], sort_keys=True)}`
 - New forbidden violations: {', '.join(stats['new_forbidden']) or 'none'}
 - Warn reasons: {', '.join(stats['warn_reasons']) or 'none'}
