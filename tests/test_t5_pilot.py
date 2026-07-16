@@ -34,6 +34,36 @@ def test_104_and_152_cost_arithmetic_uses_conservative_probe_max():
     assert result["unique_within_tripwire"] is False
 
 
+def test_docker_desktop_storage_fallback_parses_machine_readable_sizes(
+    monkeypatch, tmp_path: Path
+):
+    rows = "\n".join(
+        [
+            '{"Type":"Images","Size":"1.114GB"}',
+            '{"Type":"Containers","Size":"0B"}',
+            '{"Type":"Local Volumes","Size":"12.5MB"}',
+            '{"Type":"Build Cache","Size":"2.773GB"}',
+        ]
+    )
+    monkeypatch.setattr(
+        pilot.subprocess,
+        "run",
+        lambda *args, **kwargs: SimpleNamespace(
+            returncode=0, stdout=rows, stderr=""
+        ),
+    )
+    missing = tmp_path / "linux-docker-root-not-mounted-on-windows"
+    assert pilot._docker_storage_used(missing) == 3_899_500_000
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [("0B", 0), ("1.5KB", 1500), ("243.9MB", 243_900_000), ("2GB", 2_000_000_000)],
+)
+def test_parse_docker_size(value: str, expected: int):
+    assert pilot._parse_docker_size(value) == expected
+
+
 def test_script_never_reads_dotenv_or_prints_secret_values():
     source = SCRIPT.read_text(encoding="utf-8")
     assert "dotenv" not in source.casefold()

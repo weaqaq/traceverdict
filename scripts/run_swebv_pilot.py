@@ -12,6 +12,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import sqlite3
 import subprocess
 import sys
@@ -126,6 +127,41 @@ def _docker_root() -> Path:
     return Path(proc.stdout.strip())
 
 
+def _parse_docker_size(value: str) -> int:
+    match = re.fullmatch(r"([0-9]+(?:\.[0-9]+)?)([KMGTP]?B)", value.strip(), re.I)
+    if not match:
+        raise ValueError(f"unsupported Docker size: {value!r}")
+    multipliers = {
+        "B": 1,
+        "KB": 1000,
+        "MB": 1000**2,
+        "GB": 1000**3,
+        "TB": 1000**4,
+        "PB": 1000**5,
+    }
+    return int(float(match.group(1)) * multipliers[match.group(2).upper()])
+
+
+def _docker_storage_used(docker_root: Path) -> int:
+    """Measure Docker storage on Linux hosts and Docker Desktop alike."""
+    if docker_root.exists():
+        return shutil_disk_used(docker_root)
+    proc = subprocess.run(
+        ["docker", "system", "df", "--format", "{{json .}}"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(f"cannot measure Docker Desktop storage: {proc.stderr[-1000:]}")
+    total = 0
+    for line in proc.stdout.splitlines():
+        row = json.loads(line)
+        if row.get("Type") in {"Images", "Containers", "Local Volumes", "Build Cache"}:
+            total += _parse_docker_size(row["Size"])
+    return total
+
+
 class MemorySampler:
     def __init__(self) -> None:
         self.peak_bytes = 0
@@ -134,13 +170,34 @@ class MemorySampler:
 
     def _sample(self) -> None:
         while not self._stop.is_set():
-            values = {}
-            for line in Path("/proc/meminfo").read_text().splitlines():
-                key, value = line.split(":", 1)
-                values[key] = int(value.strip().split()[0]) * 1024
-            self.peak_bytes = max(
-                self.peak_bytes, values["MemTotal"] - values["MemAvailable"]
-            )
+            if Path("/proc/meminfo").is_file():
+                values = {}
+                for line in Path("/proc/meminfo").read_text().splitlines():
+                    key, value = line.split(":", 1)
+                    values[key] = int(value.strip().split()[0]) * 1024
+                used = values["MemTotal"] - values["MemAvailable"]
+            else:
+                import ctypes
+
+                class MemoryStatus(ctypes.Structure):
+                    _fields_ = [
+                        ("length", ctypes.c_ulong),
+                        ("memory_load", ctypes.c_ulong),
+                        ("total_physical", ctypes.c_ulonglong),
+                        ("available_physical", ctypes.c_ulonglong),
+                        ("total_page_file", ctypes.c_ulonglong),
+                        ("available_page_file", ctypes.c_ulonglong),
+                        ("total_virtual", ctypes.c_ulonglong),
+                        ("available_virtual", ctypes.c_ulonglong),
+                        ("available_extended_virtual", ctypes.c_ulonglong),
+                    ]
+
+                status = MemoryStatus()
+                status.length = ctypes.sizeof(status)
+                if not ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(status)):
+                    raise OSError("GlobalMemoryStatusEx failed")
+                used = status.total_physical - status.available_physical
+            self.peak_bytes = max(self.peak_bytes, used)
             self._stop.wait(2)
 
     def __enter__(self):
@@ -236,13 +293,13 @@ def prepare(args) -> None:
         task_dir = output / "tasks" / instance_id
         if instance_id in records_by_id and (task_dir / "task.yaml").is_file():
             continue
-        before = shutil_disk_used(docker_root)
+        before = _docker_storage_used(docker_root)
         with MemorySampler() as memory:
             image = acquire_official_image(
                 row, python_executable=sys.executable, docker_executable="docker"
             )
             materialize_task(row, image_ref=image.image_ref, output_dir=task_dir)
-        disk_delta = max(0, shutil_disk_used(docker_root) - before)
+        disk_delta = max(0, _docker_storage_used(docker_root) - before)
         if disk_delta > MAX_DISK_BYTES:
             raise RuntimeError(f"stop: {instance_id} image delta exceeds 20 GiB")
         records_by_id[instance_id] = {
