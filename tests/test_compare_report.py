@@ -184,3 +184,58 @@ def test_compare_accepts_official_swebench_aggregate_verdict(tmp_path: Path):
     task_set.write_text("org__repo-1\n", "utf-8")
     result = compare_configs("base", "candidate", task_set, db_path=db)
     assert result["stats"]["delta_pass"] == -1.0
+
+
+def test_asymmetric_repetitions_require_explicit_flag_and_disclose_both_sides(
+    tmp_path: Path,
+):
+    db = tmp_path / "traceverdict.db"
+    _seed_comparison_db(db)
+    import sqlite3
+
+    conn = sqlite3.connect(db)
+    conn.execute(
+        "INSERT INTO run SELECT 'base-S1-r1',task_id,config_id,1,mode,status,"
+        "exit_reason,started_at,finished_at,wall_time_s,tokens_in,tokens_out,"
+        "cost_usd,seed,env_fingerprint FROM run WHERE run_id='base-S1'"
+    )
+    conn.execute(
+        "INSERT INTO verdict SELECT 'v-base-S1-r1','base-S1-r1',track,name,0,"
+        "score,detail_json,judge_model,rubric_version FROM verdict "
+        "WHERE verdict_id='v-base-S1'"
+    )
+    conn.execute(
+        "INSERT INTO verdict SELECT 'v-forbidden-base-S1-r1','base-S1-r1',track,"
+        "name,passed,score,detail_json,judge_model,rubric_version FROM verdict "
+        "WHERE verdict_id='v-forbidden-base-S1'"
+    )
+    conn.commit()
+    conn.close()
+    task_set = tmp_path / "tasks.txt"
+    task_set.write_text("".join(f"S{i}\n" for i in range(1, 9)), "utf-8")
+
+    with pytest.raises(ValueError, match="repetition count mismatch"):
+        compare_configs("base", "candidate", task_set, db_path=db)
+
+    result = compare_configs(
+        "base",
+        "candidate",
+        task_set,
+        db_path=db,
+        allow_asymmetric_repetitions=True,
+    )
+    stats = result["stats"]
+    assert stats["comparison_mode"] == "asymmetric"
+    assert stats["baseline_repetitions"]["S1"] == 2
+    assert stats["candidate_repetitions"]["S1"] == 1
+    assert stats["mcnemar"]["excluded_ties"] == ["S1"]
+    report = tmp_path / "asymmetric.md"
+    generate_report(
+        result["comparison_id"],
+        db_path=db,
+        output_path=report,
+        console=Console(file=None, force_terminal=False, quiet=True),
+    )
+    text = report.read_text("utf-8")
+    assert "Comparison mode: `asymmetric`" in text
+    assert "Baseline 1/2 no-majority tasks" in text
