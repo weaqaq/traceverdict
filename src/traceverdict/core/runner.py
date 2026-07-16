@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any
 
 from traceverdict.adapters.mini_swe_agent import AdapterHarnessError, run_mini_swe_agent
+from traceverdict.adapters.codex import run_codex
 from traceverdict.adapters.swe_agent import run_swe_agent
 from traceverdict.core.config_loader import load_config
 from traceverdict.core.task_loader import load_task
@@ -30,11 +31,16 @@ from traceverdict.snapshot.workspace import (
     materialize_work_copy,
     repair_work_copy_ownership,
 )
+from traceverdict.snapshot.codex_image import ensure_codex_agent_image
 from traceverdict.tracer import db as dbmod
 from traceverdict.tracer.trajectory import (
     map_trajectory_to_events,
     reconcile_trace,
     summarize_llm_metrics,
+)
+from traceverdict.tracer.codex_jsonl import (
+    map_codex_trajectory_to_events,
+    summarize_codex_metrics,
 )
 
 
@@ -212,6 +218,25 @@ def run_task(
         # over it when no nearest _image build descriptor exists.
         image_for_run = task_image
         digest = suite_digest or image_digest(task_image, docker_exe=docker_exe)
+        if cfg["agent_name"] == "codex":
+            expected_sha = cfg["model_params"].get("codex_binary_sha256")
+            expected_bwrap_sha = cfg["model_params"].get("codex_bwrap_binary_sha256")
+            if not isinstance(expected_sha, str) or len(expected_sha) != 64:
+                raise AdapterHarnessError(
+                    "Codex config must freeze codex_binary_sha256"
+                )
+            if not isinstance(expected_bwrap_sha, str) or len(expected_bwrap_sha) != 64:
+                raise AdapterHarnessError(
+                    "Codex config must freeze codex_bwrap_binary_sha256"
+                )
+            image_for_run, digest, layer_evidence = ensure_codex_agent_image(
+                base_image=task_image,
+                docker_executable=docker_exe,
+                expected_binary_sha256=expected_sha,
+                expected_bwrap_sha256=expected_bwrap_sha,
+                expected_version=cfg["agent_version"],
+            )
+            run_out["agent_layer"] = layer_evidence
         if (
             cfg["agent_name"] == "swe-agent"
             and task["suite"] == "self"
@@ -253,6 +278,8 @@ def run_task(
                 if cfg["agent_name"] == "mini-swe-agent"
                 else run_swe_agent
                 if cfg["agent_name"] == "swe-agent"
+                else run_codex
+                if cfg["agent_name"] == "codex"
                 else None
             )
             if adapter is None:
@@ -356,9 +383,14 @@ def run_task(
             },
         )
 
-        events, count_ok, exit_status = map_trajectory_to_events(
-            traj, store_prompt_full=cfg["store_prompt_full"]
-        )
+        if cfg["agent_name"] == "codex":
+            events, count_ok, exit_status = map_codex_trajectory_to_events(
+                traj, store_prompt_full=cfg["store_prompt_full"]
+            )
+        else:
+            events, count_ok, exit_status = map_trajectory_to_events(
+                traj, store_prompt_full=cfg["store_prompt_full"]
+            )
         registry = json.loads(
             Path(cfg["litellm_model_registry"]).read_text(encoding="utf-8")
         )
@@ -367,11 +399,17 @@ def run_task(
             raise ValueError(
                 f"model {cfg['model_name']!r} missing from LiteLLM registry"
             )
-        tokens_in, tokens_out, cost = summarize_llm_metrics(
-            events,
-            instance_cost=instance_cost,
-            model_price=model_price,
-        )
+        shadow_cost = None
+        if cfg["agent_name"] == "codex":
+            tokens_in, tokens_out, cost, shadow_cost = summarize_codex_metrics(
+                events, model_price=model_price
+            )
+        else:
+            tokens_in, tokens_out, cost = summarize_llm_metrics(
+                events,
+                instance_cost=instance_cost,
+                model_price=model_price,
+            )
         has_exit = any(e["etype"] == "final" for e in events)
         for ev in events:
             dbmod.insert_event(
@@ -450,6 +488,7 @@ def run_task(
                 "tokens_in": tokens_in,
                 "tokens_out": tokens_out,
                 "cost_usd": cost,
+                "api_equivalent_shadow_cost": shadow_cost,
                 "artifacts": ["patch", "fs_diff", "log", *source_artifact_kinds],
             }
         )
