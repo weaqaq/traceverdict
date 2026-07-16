@@ -8,6 +8,7 @@ import pytest
 
 from traceverdict.adapters.codex import build_codex_command, parse_codex_jsonl
 from traceverdict.adapters.mini_swe_agent import AdapterHarnessError
+from traceverdict.snapshot.codex_image import AUTH_SHELL_WRAPPER
 from traceverdict.tracer.codex_jsonl import (
     map_codex_trajectory_to_events,
     summarize_codex_metrics,
@@ -33,8 +34,13 @@ def _params():
         "inner_sandbox": "workspace-write",
         "sandbox_workspace_write": {"network_access": True},
         "history": {"persistence": "none"},
-        "features": {"shell_tool": True, "shell_snapshot": False},
+        "features": {
+            "shell_tool": True,
+            "shell_snapshot": False,
+            "unified_exec": False,
+        },
         "hide_agent_reasoning": False,
+        "auth_isolation": "per_tool_mount_namespace_hide_codex_home_v2",
         "service_tier": "omitted",
         "temperature": "omitted",
         "top_p": "omitted",
@@ -91,6 +97,10 @@ def test_command_freezes_behavior_and_rejects_identity_drift():
     )
     assert command[:4] == ["/opt/traceverdict/codex", "exec", "--json", "--ephemeral"]
     assert "workspace-write" in command
+    assert "--strict-config" in command
+    assert "--dangerously-bypass-hook-trust" not in command
+    assert "--profile" not in command
+    assert "features.unified_exec=false" in command
     assert "sandbox_workspace_write.network_access=true" in command
     drift = _params()
     drift["network_mode"] = "host"
@@ -151,3 +161,11 @@ def test_missing_usage_is_harness_level_format_error():
     traj["records"][-1].pop("usage")
     with pytest.raises(TrajectoryFormatError, match="missing usage"):
         map_codex_trajectory_to_events(traj)
+
+
+def test_auth_shell_wrapper_hides_codex_home_before_original_bash():
+    mount_index = AUTH_SHELL_WRAPPER.index("mount -t tmpfs")
+    exec_index = AUTH_SHELL_WRAPPER.index('exec /opt/traceverdict/bash-real "$@"')
+    assert "umount /run/traceverdict-codex/auth.json" in AUTH_SHELL_WRAPPER
+    assert mount_index < exec_index
+    assert "exit 126" in AUTH_SHELL_WRAPPER

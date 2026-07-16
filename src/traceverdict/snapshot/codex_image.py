@@ -12,6 +12,17 @@ from pathlib import Path
 from traceverdict.adapters.mini_swe_agent import AdapterHarnessError
 from traceverdict.snapshot.image import image_digest
 
+AUTH_SHELL_WRAPPER = """#!/bin/sh
+set -eu
+umount /run/traceverdict-codex/auth.json 2>/dev/null || true
+if ! mount -t tmpfs -o mode=0700,nosuid,nodev,noexec tmpfs /run/traceverdict-codex; then
+    echo "traceverdict: failed to isolate Codex credentials from agent shell" >&2
+    exit 126
+fi
+exec /opt/traceverdict/bash-real "$@"
+"""
+AUTH_SHELL_WRAPPER_SHA256 = hashlib.sha256(AUTH_SHELL_WRAPPER.encode("utf-8")).hexdigest()
+
 
 def _sha256(path: Path) -> str:
     digest = hashlib.sha256()
@@ -54,7 +65,10 @@ def ensure_codex_agent_image(
         )
     base_digest = image_digest(base_image, docker_exe=docker_executable)
     identity = hashlib.sha256(
-        f"{base_digest}\0{expected_version}\0{actual_sha}\0{actual_bwrap_sha}".encode("utf-8")
+        (
+            f"{base_digest}\0{expected_version}\0{actual_sha}\0{actual_bwrap_sha}"
+            f"\0{AUTH_SHELL_WRAPPER_SHA256}"
+        ).encode("utf-8")
     ).hexdigest()[:20]
     tag = f"traceverdict/codex-agent:{identity}"
     inspect = subprocess.run(
@@ -85,14 +99,20 @@ def ensure_codex_agent_image(
                 os.link(bwrap, context_bwrap)
             except OSError:
                 shutil.copy2(bwrap, context_bwrap)
+        auth_shell_wrapper = context / "bash"
+        auth_shell_wrapper.write_text(AUTH_SHELL_WRAPPER, encoding="utf-8", newline="\n")
         dockerfile = context / "Dockerfile"
         dockerfile.write_text(
             f"FROM {base_image}\n"
             "COPY --chmod=0755 codex /opt/traceverdict/codex\n"
             "COPY --chmod=0755 bwrap /opt/traceverdict/codex-resources/bwrap\n"
+            "RUN cp /bin/bash /opt/traceverdict/bash-real\n"
+            "COPY --chmod=0755 bash /bin/bash\n"
+            "RUN mkdir -p /run/traceverdict-codex && : > /run/traceverdict-codex/auth.json\n"
             f'LABEL org.traceverdict.codex.version="{expected_version}" '
             f'org.traceverdict.codex.sha256="{actual_sha}" '
             f'org.traceverdict.codex.bwrap.sha256="{actual_bwrap_sha}" '
+            f'org.traceverdict.codex.auth_shell_wrapper.sha256="{AUTH_SHELL_WRAPPER_SHA256}" '
             f'org.traceverdict.base.digest="{base_digest}"\n',
             encoding="utf-8",
         )
@@ -116,7 +136,8 @@ def ensure_codex_agent_image(
         "codex_version": expected_version,
         "codex_binary_sha256": actual_sha,
         "codex_bwrap_binary_sha256": actual_bwrap_sha,
+        "auth_shell_wrapper_sha256": AUTH_SHELL_WRAPPER_SHA256,
         "network_mode": "bridge",
-        "layer_policy": "official_static_runtime_only_no_packages",
+        "layer_policy": "official_static_runtime_plus_per_tool_auth_namespace_no_packages",
     }
     return tag, digest, evidence

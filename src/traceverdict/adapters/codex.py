@@ -34,6 +34,7 @@ def _config_args(model_params: dict[str, Any]) -> list[str]:
         "container_cap_add": "SYS_ADMIN",
         "container_seccomp": "unconfined",
         "inner_sandbox": "workspace-write",
+        "auth_isolation": "per_tool_mount_namespace_hide_codex_home_v2",
     }
     mismatches = {
         key: {"expected": value, "actual": model_params.get(key)}
@@ -48,7 +49,11 @@ def _config_args(model_params: dict[str, Any]) -> list[str]:
     nested_expected = {
         "sandbox_workspace_write": {"network_access": True},
         "history": {"persistence": "none"},
-        "features": {"shell_tool": True, "shell_snapshot": False},
+        "features": {
+            "shell_tool": True,
+            "shell_snapshot": False,
+            "unified_exec": False,
+        },
         "hide_agent_reasoning": False,
     }
     nested_mismatches = {
@@ -73,6 +78,7 @@ def _config_args(model_params: dict[str, Any]) -> list[str]:
         "-c", "hide_agent_reasoning=false",
         "-c", "features.shell_tool=true",
         "-c", "features.shell_snapshot=false",
+        "-c", "features.unified_exec=false",
         "-c", "sandbox_workspace_write.network_access=true",
     ]
 
@@ -87,6 +93,7 @@ def build_codex_command(
         "--ephemeral",
         "--ignore-user-config",
         "--ignore-rules",
+        "--strict-config",
         "--model",
         model_name,
         "--sandbox",
@@ -161,6 +168,7 @@ def run_codex(
         docker_executable,
         "run",
         "--rm",
+        "-i",
         "--network",
         "bridge",
         "--cap-add",
