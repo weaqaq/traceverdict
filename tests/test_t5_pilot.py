@@ -56,6 +56,19 @@ def test_provider_credentials_are_explicit_and_mimo_needs_no_custom_base(
     pilot._require_credentials({"model_name": "xiaomi_mimo/mimo-v2.5"})
 
 
+def test_agent_container_guard_removes_only_containers_created_by_run(monkeypatch):
+    monkeypatch.setattr(pilot, "_container_ids", lambda: {"old", "new-agent"})
+    calls = []
+
+    def fake_run(command, **_kwargs):
+        calls.append(command)
+        return SimpleNamespace(returncode=0, stdout="", stderr="")
+
+    monkeypatch.setattr(pilot.subprocess, "run", fake_run)
+    assert pilot._cleanup_new_containers({"old"}) == ["new-agent"]
+    assert calls == [["docker", "rm", "-f", "new-agent"]]
+
+
 def test_selected_ids_keep_pilot_prefix_and_expand_to_frozen_16(tmp_path):
     task_set = tmp_path / "task_set.txt"
     ids = [f"repo__task-{index:02d}" for index in range(16)]

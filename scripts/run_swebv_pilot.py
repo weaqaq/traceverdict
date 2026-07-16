@@ -56,6 +56,32 @@ GROSS_RUNS = 152
 CUMULATIVE_TRIPWIRE_USD = 28.0
 
 
+def _container_ids() -> set[str]:
+    result = subprocess.run(
+        ["docker", "ps", "-aq"], capture_output=True, text=True, check=False
+    )
+    if result.returncode != 0:
+        raise RuntimeError(f"cannot snapshot Docker containers: {result.stderr[-1000:]!r}")
+    return {line.strip() for line in result.stdout.splitlines() if line.strip()}
+
+
+def _cleanup_new_containers(before: set[str]) -> list[str]:
+    new_ids = sorted(_container_ids() - before)
+    for container_id in new_ids:
+        result = subprocess.run(
+            ["docker", "rm", "-f", container_id],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            raise RuntimeError(
+                f"failed to remove run-owned container {container_id}: "
+                f"{result.stderr[-1000:]!r}"
+            )
+    return new_ids
+
+
 def _json_dump(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
@@ -268,13 +294,21 @@ def run_one(args) -> None:
     )
     record = next(item for item in records if item["instance_id"] == args.instance_id)
     task_dir = args.output / "tasks" / args.instance_id
-    result = run_task(
-        task_dir,
-        args.config,
-        db_path=args.db,
-        artifacts_dir=args.output / "artifacts",
-        repetition_idx=int(getattr(args, "repetition_idx", 0)),
-    )
+    before_containers = _container_ids()
+    try:
+        result = run_task(
+            task_dir,
+            args.config,
+            db_path=args.db,
+            artifacts_dir=args.output / "artifacts",
+            repetition_idx=int(getattr(args, "repetition_idx", 0)),
+        )
+    finally:
+        # mini-swe-agent's DockerEnvironment normally relies on ``--rm``.
+        # Provider/API exits can bypass its normal context cleanup, so the
+        # outer paid-run orchestrator removes only containers born during this
+        # agent run. The independent official verifier starts after this guard.
+        _cleanup_new_containers(before_containers)
     if result.get("status") == "harness_error":
         raise RuntimeError(f"agent harness error: {result.get('error')}")
     conn = _connect(args.db)
