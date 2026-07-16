@@ -110,6 +110,9 @@ def test_command_freezes_behavior_and_rejects_identity_drift():
 
 def test_jsonl_parser_fails_closed_on_bad_line():
     assert parse_codex_jsonl('{"type":"turn.started"}\n')[0]["type"] == "turn.started"
+    assert parse_codex_jsonl(
+        '{"type":"item.completed","item":{"type":"agent_message","text":"修复完成"}}\n'
+    )[0]["item"]["text"] == "修复完成"
     with pytest.raises(AdapterHarnessError, match="invalid"):
         parse_codex_jsonl("not-json\n")
 
