@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import hashlib
 import json
 import sqlite3
 from pathlib import Path
@@ -36,6 +37,38 @@ def _completed_run(conn: sqlite3.Connection, task_id: str, config_id: str):
     return completed[0] if completed else None
 
 
+def _rebase_artifact_paths(conn: sqlite3.Connection, artifacts: Path) -> int:
+    """Repair artifact locations after the private evidence root is relocated.
+
+    The database remains the audit record, so a path is changed only when the
+    expected run-relative file exists under the configured private root and its
+    bytes still match the stored SHA256.
+    """
+    changed = 0
+    for row in conn.execute("SELECT artifact_id, run_id, path, sha256 FROM artifact"):
+        current = Path(row["path"])
+        if current.is_file():
+            continue
+        candidate = artifacts / row["run_id"] / current.name
+        if current.parent.name == "adapter":
+            candidate = artifacts / row["run_id"] / "adapter" / current.name
+        if not candidate.is_file():
+            continue
+        actual = hashlib.sha256(candidate.read_bytes()).hexdigest()
+        if actual != row["sha256"]:
+            raise RuntimeError(
+                f"refusing artifact path repair for {row['artifact_id']}: "
+                f"sha256 {actual} != {row['sha256']}"
+            )
+        conn.execute(
+            "UPDATE artifact SET path=? WHERE artifact_id=?",
+            (str(candidate.resolve()), row["artifact_id"]),
+        )
+        changed += 1
+    conn.commit()
+    return changed
+
+
 def run_self_gate(
     config: Path, db_path: Path, artifacts: Path, output: Path, ledger_path: Path
 ) -> dict:
@@ -45,7 +78,14 @@ def run_self_gate(
     started = _now()
     rows: list[dict] = []
     new_run_ids: list[str] = []
+    subscription_window_recorded = False
     try:
+        repaired_artifact_paths = _rebase_artifact_paths(conn, artifacts.resolve())
+        if repaired_artifact_paths:
+            print(
+                json.dumps({"repaired_artifact_paths": repaired_artifact_paths}),
+                flush=True,
+            )
         for task_id in SELF_TASKS:
             task_path = Path("tasks/self") / task_id
             prior = _completed_run(conn, task_id, cfg["config_id"])
@@ -85,6 +125,16 @@ def run_self_gate(
                 }
             )
             print(json.dumps(rows[-1]), flush=True)
+        if new_run_ids:
+            append_subscription_window(
+                ledger_path,
+                window_started_at=started,
+                window_finished_at=_now(),
+                completed_run_ids=new_run_ids,
+                quota_error=None,
+                pause_reason=None,
+            )
+            subscription_window_recorded = True
     finally:
         conn.close()
     summary = {
@@ -92,6 +142,8 @@ def run_self_gate(
         "config_id": cfg["config_id"],
         "started_at": started,
         "finished_at": _now(),
+        "repaired_artifact_paths": repaired_artifact_paths,
+        "subscription_window_recorded": subscription_window_recorded,
         "adapter_complete": len(rows) == 8 and all(row["status"] != "harness_error" for row in rows),
         "rows": rows,
     }
