@@ -391,6 +391,48 @@ def run_task(
             events, count_ok, exit_status = map_trajectory_to_events(
                 traj, store_prompt_full=cfg["store_prompt_full"]
             )
+        if cfg["agent_name"] == "codex" and not count_ok:
+            for ev in events:
+                dbmod.insert_event(
+                    conn,
+                    {
+                        "run_id": run_id,
+                        "step_idx": ev["step_idx"],
+                        "ts": ev["ts"],
+                        "etype": ev["etype"],
+                        "payload_json": ev["payload_json"],
+                        "tokens_in": ev.get("tokens_in"),
+                        "tokens_out": ev.get("tokens_out"),
+                        "latency_ms": ev.get("latency_ms"),
+                    },
+                )
+            _update_run(
+                conn,
+                run_id,
+                status="harness_error",
+                exit_reason=exit_status or "incomplete_codex_trace",
+                finished_at=_now(),
+                wall_time_s=elapsed(),
+                tokens_in=None,
+                tokens_out=None,
+                cost_usd=None,
+                env_fingerprint=env_fp,
+            )
+            run_out.update(
+                {
+                    "status": "harness_error",
+                    "error": exit_status or "incomplete_codex_trace",
+                    "trace_complete": False,
+                    "patch_sha256": patch_sha,
+                    "event_count": len(dbmod.get_events_for_run(conn, run_id)),
+                    "tokens_in": None,
+                    "tokens_out": None,
+                    "cost_usd": None,
+                    "artifacts": ["patch", "fs_diff", "log", *source_artifact_kinds],
+                }
+            )
+            return run_out
+
         registry = json.loads(
             Path(cfg["litellm_model_registry"]).read_text(encoding="utf-8")
         )

@@ -29,6 +29,13 @@ def _item(record: dict[str, Any]) -> dict[str, Any]:
     return value if isinstance(value, dict) else {}
 
 
+def _failure_reason(failures: list[dict[str, Any]]) -> str:
+    text = _canonical(failures).lower()
+    if "usage limit" in text or "quota" in text:
+        return "SubscriptionLimitExceeded"
+    return "CodexTurnFailed"
+
+
 def _usage(record: dict[str, Any]) -> dict[str, int]:
     usage = record.get("usage")
     if not isinstance(usage, dict):
@@ -168,7 +175,7 @@ def map_codex_trajectory_to_events(
             }, ensure_ascii=False),
             "tokens_in": None, "tokens_out": None, "latency_ms": None,
         })
-        return events, False, None
+        return events, False, _failure_reason(failures)
 
     tool_events = sum(event["etype"] == "tool_call" for event in events)
     final_events = sum(event["etype"] == "final" for event in events)

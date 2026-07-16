@@ -133,10 +133,24 @@ def test_codex_mapping_is_turn_aggregate_and_preserves_command():
 
 def test_codex_missing_final_and_nonzero_exit_are_incomplete():
     events, complete, status = map_codex_trajectory_to_events(_trajectory(include_final=False))
-    assert complete is False and status is None
+    assert complete is False and status == "CodexTurnFailed"
     assert events[-1]["etype"] == "error"
     events, complete, _ = map_codex_trajectory_to_events(_trajectory(returncode=1))
     assert complete is False
+
+
+def test_subscription_limit_is_an_incomplete_error_without_false_llm_or_final():
+    traj = _trajectory(include_final=False)
+    traj["records"] = [
+        {"type": "thread.started"},
+        {"type": "turn.started"},
+        {"type": "error", "message": "quota"},
+        {"type": "turn.failed", "error": {"message": "You've hit your usage limit."}},
+    ]
+    events, complete, status = map_codex_trajectory_to_events(traj)
+    assert complete is False
+    assert status == "SubscriptionLimitExceeded"
+    assert [event["etype"] for event in events] == ["error"]
 
 
 def test_shadow_cost_is_lower_bound_and_never_actual_spend():
