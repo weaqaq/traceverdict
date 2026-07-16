@@ -1,0 +1,12 @@
+pytest-dev__pytest-7982
+sympy__sympy-20438
+django__django-16315
+pydata__xarray-7229
+scikit-learn__scikit-learn-12682
+astropy__astropy-14369
+django__django-14376
+matplotlib__matplotlib-22871
+matplotlib__matplotlib-25960
+psf__requests-1142
+pydata__xarray-3677
+pytest-dev__pytest-7490
