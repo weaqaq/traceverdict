@@ -13,6 +13,7 @@ from pathlib import PureWindowsPath
 from traceverdict.core.config_loader import load_config
 from traceverdict.core.runner import run_task
 from traceverdict.m4c import append_subscription_window
+from traceverdict.tracer.db import init_db
 from traceverdict.verifier import rule_run_passed, verify_run
 
 
@@ -79,7 +80,7 @@ def run_self_gate(
     config: Path, db_path: Path, artifacts: Path, output: Path, ledger_path: Path
 ) -> dict:
     cfg = load_config(config)
-    conn = sqlite3.connect(db_path)
+    conn = init_db(db_path)
     conn.row_factory = sqlite3.Row
     started = _now()
     rows: list[dict] = []
