@@ -106,6 +106,13 @@ def test_selected_ids_keep_pilot_prefix_and_expand_to_frozen_16(tmp_path):
 
     assert pilot._selected_ids(SimpleNamespace(task_set=task_set, all=False)) == ids[:5]
     assert pilot._selected_ids(SimpleNamespace(task_set=task_set, all=True)) == ids
+    assert pilot._selected_ids(
+        SimpleNamespace(task_set=task_set, all=False, instance_id=ids[9])
+    ) == [ids[9]]
+    with pytest.raises(ValueError, match="not in frozen task set"):
+        pilot._selected_ids(
+            SimpleNamespace(task_set=task_set, all=False, instance_id="missing")
+        )
 
 
 def test_run_all_stops_before_rebuying_incomplete_paid_run(tmp_path, monkeypatch):

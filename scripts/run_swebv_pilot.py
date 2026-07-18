@@ -211,6 +211,11 @@ class MemorySampler:
 
 def _selected_ids(args) -> list[str]:
     ids = _task_set(args.task_set)
+    requested = getattr(args, "instance_id", None)
+    if requested is not None:
+        if requested not in ids:
+            raise ValueError(f"instance_id is not in frozen task set: {requested}")
+        return [requested]
     return ids if getattr(args, "all", False) else ids[:5]
 
 
@@ -292,7 +297,17 @@ def prepare(args) -> None:
         instance_id = row["instance_id"]
         task_dir = output / "tasks" / instance_id
         if instance_id in records_by_id and (task_dir / "task.yaml").is_file():
-            continue
+            try:
+                image_digest(
+                    records_by_id[instance_id]["image_ref"],
+                    docker_executable="docker",
+                )
+            except RuntimeError:
+                # A completed M4-C task deliberately removes its local image.
+                # Reacquire only when an unfinished task needs that tag again.
+                pass
+            else:
+                continue
         before = _docker_storage_used(docker_root)
         with MemorySampler() as memory:
             image = acquire_official_image(
@@ -595,6 +610,10 @@ def parser() -> argparse.ArgumentParser:
     sub = root.add_subparsers(dest="command", required=True)
     prepare_parser = sub.add_parser("prepare")
     prepare_parser.add_argument("--all", action="store_true")
+    prepare_parser.add_argument(
+        "--instance-id",
+        help="prepare exactly one member of the frozen task set (M4-C batching)",
+    )
     prepare_parser.set_defaults(func=prepare)
     one = sub.add_parser("run-one")
     one.add_argument("instance_id")
