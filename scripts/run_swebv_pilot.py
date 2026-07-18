@@ -40,6 +40,7 @@ from traceverdict.swebench_adapter import (
     SWEBENCH_VERSION,
     acquire_official_image,
     assert_three_way_agreement,
+    image_digest,
     load_verified_instances,
     materialize_task,
     record_official_verdict,
