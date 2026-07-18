@@ -22,6 +22,8 @@ M3 froze 16 SWE-bench Verified tasks and added 85 paid evaluations. The cross-pr
 
 See the [M3 evidence summary](docs/evidence/m3/m3_summary.md) and its [machine-readable companion](docs/evidence/m3/m3_summary.json).
 
+The later [M4-C compatibility arm](docs/evidence/m4c/m4c_codex_arm_20260718.md) ran a pinned Codex CLI locally while keeping subscription credentials off the verifier host. It completed 16/16 official judgments with 6/16 resolved; versus the DeepSeek Flash `k=2` baseline, the authorized asymmetric comparison yielded delta pass `+0.0625`, 95% CI `[-0.15625, 0.3125]`, exact McNemar `p=0.25`, and no regression alarm. This is cross-scaffolding compatibility evidence, not a model leaderboard claim.
+
 ## Install
 
 Python 3.12 and Docker are required for real task execution.
