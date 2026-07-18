@@ -108,6 +108,22 @@ def test_command_freezes_behavior_and_rejects_identity_drift():
         build_codex_command(model_name="gpt-5.6-luna", model_params=drift, container_cwd="/testbed")
 
 
+def test_command_propagates_approved_sol_medium_identity():
+    params = _params()
+    params["model_reasoning_effort"] = "medium"
+    command = build_codex_command(
+        model_name="gpt-5.6-sol", model_params=params, container_cwd="/testbed"
+    )
+    assert "gpt-5.6-sol" in command
+    assert 'model_reasoning_effort="medium"' in command
+
+    params["model_reasoning_effort"] = "low"
+    with pytest.raises(AdapterHarnessError, match="explicitly approved"):
+        build_codex_command(
+            model_name="gpt-5.6-sol", model_params=params, container_cwd="/testbed"
+        )
+
+
 def test_jsonl_parser_fails_closed_on_bad_line():
     assert parse_codex_jsonl('{"type":"turn.started"}\n')[0]["type"] == "turn.started"
     assert parse_codex_jsonl(

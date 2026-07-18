@@ -19,10 +19,15 @@ CODEX_BINARY_IN_IMAGE = "/opt/traceverdict/codex"
 
 def _config_args(model_params: dict[str, Any]) -> list[str]:
     """Return the complete behavior-affecting Codex config overrides."""
+    effort = model_params.get("model_reasoning_effort")
+    if effort not in {"high", "medium"}:
+        raise AdapterHarnessError(
+            "model_reasoning_effort must be an explicitly approved M4-C value "
+            f"(high or medium), got {effort!r}"
+        )
     expected = {
         "auth_mode": "chatgpt_subscription",
         "billing_mode": "subscription_unallocatable",
-        "model_reasoning_effort": "high",
         "approval_policy": "never",
         "sandbox_mode": "workspace-write",
         "web_search": "disabled",
@@ -71,7 +76,7 @@ def _config_args(model_params: dict[str, Any]) -> list[str]:
     if model_params.get("temperature") != "omitted" or model_params.get("top_p") != "omitted":
         raise AdapterHarnessError("temperature and top_p must be explicitly omitted")
     return [
-        "-c", "model_reasoning_effort=\"high\"",
+        "-c", f"model_reasoning_effort=\"{effort}\"",
         "-c", "approval_policy=\"never\"",
         "-c", "web_search=\"disabled\"",
         "-c", "history.persistence=\"none\"",
