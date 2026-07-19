@@ -67,6 +67,7 @@ The command fails closed on an incomplete 16-task/`k=2` matrix, missing metrics 
 - [F-3](docs/findings/F3.md): a task-template-loss alarm was unstable when it depended only on cost at `k=1`.
 - [F-4](docs/findings/F4.md): CRLF conversion caused a cross-platform forbidden-path false positive.
 - [F-5](docs/findings/F5.md): strict reconciliation caught a provider reasoning-token pricing partition bug.
+- [F-6](docs/findings/F6.md): a 96-run, four-arm audit separated shared failures into sampling difficulty, runtime constraints, and submitted task-level convergence.
 
 ## Build/reuse boundary
 

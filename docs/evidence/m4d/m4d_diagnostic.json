@@ -1,0 +1,4464 @@
+{
+  "all_fail_classification": [
+    {
+      "category": "mixed_constraints_and_task_failure",
+      "non_submitted_reasons": {
+        "APIError": 1,
+        "LimitsExceeded": 2
+      },
+      "non_submitted_runs": 3,
+      "submitted_runs": 3,
+      "task_id": "sympy__sympy-20438"
+    },
+    {
+      "category": "submitted_convergence",
+      "non_submitted_reasons": {},
+      "non_submitted_runs": 0,
+      "submitted_runs": 6,
+      "task_id": "pydata__xarray-7229"
+    },
+    {
+      "category": "mixed_constraints_and_task_failure",
+      "non_submitted_reasons": {
+        "APIError": 1,
+        "ContextWindowExceededError": 1
+      },
+      "non_submitted_runs": 2,
+      "submitted_runs": 4,
+      "task_id": "scikit-learn__scikit-learn-12682"
+    },
+    {
+      "category": "submitted_convergence",
+      "non_submitted_reasons": {},
+      "non_submitted_runs": 0,
+      "submitted_runs": 6,
+      "task_id": "matplotlib__matplotlib-22871"
+    },
+    {
+      "category": "mixed_constraints_and_task_failure",
+      "non_submitted_reasons": {
+        "ContextWindowExceededError": 2,
+        "LimitsExceeded": 1
+      },
+      "non_submitted_runs": 3,
+      "submitted_runs": 3,
+      "task_id": "sphinx-doc__sphinx-8593"
+    },
+    {
+      "category": "mixed_constraints_and_task_failure",
+      "non_submitted_reasons": {
+        "ContextWindowExceededError": 1
+      },
+      "non_submitted_runs": 1,
+      "submitted_runs": 5,
+      "task_id": "sphinx-doc__sphinx-8721"
+    }
+  ],
+  "conclusion": "mixed: subset difficulty shift, harness/provider constraints, and submitted-task convergence all contribute",
+  "config_ids": {
+    "codex": "m4c-codex-0-144-4-gpt-5-6-luna-high-subscription-v2",
+    "flash": "dev-deepseek-v4-flash-v2",
+    "mimo": "probe-mimo-v2-5-thinking-v3",
+    "pro": "m4s-mini-2-4-5-deepseek-v4-pro-thinking-v1"
+  },
+  "difficulty_shift": {
+    "all_fail_to_full_patch_median_ratio": 2.7711864406779663,
+    "frozen_16": {
+      "count": 16,
+      "difficulty": {
+        "1-4 hours": 2,
+        "15 min - 1 hour": 10,
+        "<15 min fix": 4
+      },
+      "files": {
+        "mean": 1.5625,
+        "median": 1.5,
+        "multi_file_fraction": 0.5
+      },
+      "patch_bytes": {
+        "mean": 3235.125,
+        "median": 1938.5,
+        "p25": 737.75,
+        "p75": 3126.75
+      },
+      "tasks": [
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 441,
+          "task_id": "pytest-dev__pytest-7982"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 3,
+          "patch_bytes": 2873,
+          "task_id": "sympy__sympy-20438"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 2319,
+          "task_id": "django__django-16315"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 2032,
+          "task_id": "pydata__xarray-7229"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 13568,
+          "task_id": "scikit-learn__scikit-learn-12682"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 2,
+          "patch_bytes": 12099,
+          "task_id": "astropy__astropy-14369"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 2,
+          "patch_bytes": 1845,
+          "task_id": "django__django-14376"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 722,
+          "task_id": "matplotlib__matplotlib-22871"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 2269,
+          "task_id": "matplotlib__matplotlib-25960"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 743,
+          "task_id": "psf__requests-1142"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 422,
+          "task_id": "pydata__xarray-3677"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1711,
+          "task_id": "pytest-dev__pytest-7490"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 2,
+          "patch_bytes": 3888,
+          "task_id": "scikit-learn__scikit-learn-25102"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 4830,
+          "task_id": "sphinx-doc__sphinx-8593"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 573,
+          "task_id": "sphinx-doc__sphinx-8721"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 1427,
+          "task_id": "sympy__sympy-17318"
+        }
+      ]
+    },
+    "sample_multi_file_percentage_point_shift": 35.8,
+    "sample_to_full_patch_median_ratio": 2.190395480225989,
+    "selection_note": "The 16 tasks were deliberately stratified by patch-size band and single/multi-file status; these are descriptive effects, not random-sample p-values.",
+    "strict_all_fail": {
+      "count": 6,
+      "difficulty": {
+        "15 min - 1 hour": 5,
+        "<15 min fix": 1
+      },
+      "files": {
+        "mean": 1.6666666666666667,
+        "median": 1.5,
+        "multi_file_fraction": 0.5
+      },
+      "patch_bytes": {
+        "mean": 4099.666666666667,
+        "median": 2452.5,
+        "p25": 1049.5,
+        "p75": 4340.75
+      },
+      "tasks": [
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 3,
+          "patch_bytes": 2873,
+          "task_id": "sympy__sympy-20438"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 2032,
+          "task_id": "pydata__xarray-7229"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 13568,
+          "task_id": "scikit-learn__scikit-learn-12682"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 722,
+          "task_id": "matplotlib__matplotlib-22871"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 4830,
+          "task_id": "sphinx-doc__sphinx-8593"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 573,
+          "task_id": "sphinx-doc__sphinx-8721"
+        }
+      ]
+    },
+    "verified_500": {
+      "count": 500,
+      "difficulty": {
+        "1-4 hours": 42,
+        "15 min - 1 hour": 261,
+        "<15 min fix": 194,
+        ">4 hours": 3
+      },
+      "files": {
+        "mean": 1.246,
+        "median": 1.0,
+        "multi_file_fraction": 0.142
+      },
+      "patch_bytes": {
+        "mean": 1587.352,
+        "median": 885.0,
+        "p25": 622.5,
+        "p75": 1615.5
+      },
+      "tasks": [
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 470,
+          "task_id": "astropy__astropy-12907"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1486,
+          "task_id": "astropy__astropy-13033"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 853,
+          "task_id": "astropy__astropy-13236"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 4,
+          "patch_bytes": 13884,
+          "task_id": "astropy__astropy-13398"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 512,
+          "task_id": "astropy__astropy-13453"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 1,
+          "patch_bytes": 1023,
+          "task_id": "astropy__astropy-13579"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 5777,
+          "task_id": "astropy__astropy-13977"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 728,
+          "task_id": "astropy__astropy-14096"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 2186,
+          "task_id": "astropy__astropy-14182"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 592,
+          "task_id": "astropy__astropy-14309"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 955,
+          "task_id": "astropy__astropy-14365"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 2,
+          "patch_bytes": 12099,
+          "task_id": "astropy__astropy-14369"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1517,
+          "task_id": "astropy__astropy-14508"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 481,
+          "task_id": "astropy__astropy-14539"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 963,
+          "task_id": "astropy__astropy-14598"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 869,
+          "task_id": "astropy__astropy-14995"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1165,
+          "task_id": "astropy__astropy-7166"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 709,
+          "task_id": "astropy__astropy-7336"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1062,
+          "task_id": "astropy__astropy-7606"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 910,
+          "task_id": "astropy__astropy-7671"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 5131,
+          "task_id": "astropy__astropy-8707"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1674,
+          "task_id": "astropy__astropy-8872"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 562,
+          "task_id": "django__django-10097"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 2,
+          "patch_bytes": 1554,
+          "task_id": "django__django-10554"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 609,
+          "task_id": "django__django-10880"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 582,
+          "task_id": "django__django-10914"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 2434,
+          "task_id": "django__django-10973"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 520,
+          "task_id": "django__django-10999"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 746,
+          "task_id": "django__django-11066"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 3186,
+          "task_id": "django__django-11087"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 945,
+          "task_id": "django__django-11095"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 808,
+          "task_id": "django__django-11099"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 492,
+          "task_id": "django__django-11119"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 581,
+          "task_id": "django__django-11133"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 4,
+          "patch_bytes": 7548,
+          "task_id": "django__django-11138"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1519,
+          "task_id": "django__django-11141"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 4267,
+          "task_id": "django__django-11149"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 534,
+          "task_id": "django__django-11163"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 579,
+          "task_id": "django__django-11179"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 831,
+          "task_id": "django__django-11206"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 527,
+          "task_id": "django__django-11211"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1270,
+          "task_id": "django__django-11239"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1668,
+          "task_id": "django__django-11265"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 2762,
+          "task_id": "django__django-11276"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1713,
+          "task_id": "django__django-11292"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 666,
+          "task_id": "django__django-11299"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 1236,
+          "task_id": "django__django-11333"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 3,
+          "patch_bytes": 3224,
+          "task_id": "django__django-11400"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 946,
+          "task_id": "django__django-11433"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 575,
+          "task_id": "django__django-11451"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 610,
+          "task_id": "django__django-11477"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 675,
+          "task_id": "django__django-11490"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 5,
+          "patch_bytes": 4525,
+          "task_id": "django__django-11532"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 2499,
+          "task_id": "django__django-11551"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 630,
+          "task_id": "django__django-11555"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 584,
+          "task_id": "django__django-11603"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 3304,
+          "task_id": "django__django-11728"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 3,
+          "patch_bytes": 2077,
+          "task_id": "django__django-11734"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1777,
+          "task_id": "django__django-11740"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1022,
+          "task_id": "django__django-11749"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 806,
+          "task_id": "django__django-11790"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 739,
+          "task_id": "django__django-11815"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 919,
+          "task_id": "django__django-11820"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 869,
+          "task_id": "django__django-11848"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 427,
+          "task_id": "django__django-11880"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 2,
+          "patch_bytes": 10818,
+          "task_id": "django__django-11885"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 901,
+          "task_id": "django__django-11951"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 559,
+          "task_id": "django__django-11964"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 870,
+          "task_id": "django__django-11999"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1268,
+          "task_id": "django__django-12039"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1412,
+          "task_id": "django__django-12050"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 546,
+          "task_id": "django__django-12125"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 745,
+          "task_id": "django__django-12143"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 2268,
+          "task_id": "django__django-12155"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 525,
+          "task_id": "django__django-12193"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 464,
+          "task_id": "django__django-12209"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 680,
+          "task_id": "django__django-12262"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 563,
+          "task_id": "django__django-12273"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 839,
+          "task_id": "django__django-12276"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 510,
+          "task_id": "django__django-12304"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 684,
+          "task_id": "django__django-12308"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 2,
+          "patch_bytes": 1614,
+          "task_id": "django__django-12325"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 2165,
+          "task_id": "django__django-12406"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 399,
+          "task_id": "django__django-12419"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 580,
+          "task_id": "django__django-12663"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 1,
+          "patch_bytes": 850,
+          "task_id": "django__django-12708"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1986,
+          "task_id": "django__django-12713"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 2,
+          "patch_bytes": 1527,
+          "task_id": "django__django-12741"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1377,
+          "task_id": "django__django-12754"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 947,
+          "task_id": "django__django-12774"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 690,
+          "task_id": "django__django-12858"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 523,
+          "task_id": "django__django-12965"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 510,
+          "task_id": "django__django-13012"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 582,
+          "task_id": "django__django-13023"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 693,
+          "task_id": "django__django-13028"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 970,
+          "task_id": "django__django-13033"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 869,
+          "task_id": "django__django-13089"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 612,
+          "task_id": "django__django-13109"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 884,
+          "task_id": "django__django-13112"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 4,
+          "patch_bytes": 6564,
+          "task_id": "django__django-13121"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 1,
+          "patch_bytes": 3354,
+          "task_id": "django__django-13128"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 961,
+          "task_id": "django__django-13158"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 3,
+          "patch_bytes": 2611,
+          "task_id": "django__django-13195"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 2,
+          "patch_bytes": 7779,
+          "task_id": "django__django-13212"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1278,
+          "task_id": "django__django-13279"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1114,
+          "task_id": "django__django-13297"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1186,
+          "task_id": "django__django-13315"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 980,
+          "task_id": "django__django-13343"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 3,
+          "patch_bytes": 5088,
+          "task_id": "django__django-13344"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1839,
+          "task_id": "django__django-13346"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1025,
+          "task_id": "django__django-13363"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 2030,
+          "task_id": "django__django-13401"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 359,
+          "task_id": "django__django-13406"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 651,
+          "task_id": "django__django-13410"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 654,
+          "task_id": "django__django-13417"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 1,
+          "patch_bytes": 1290,
+          "task_id": "django__django-13449"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 2,
+          "patch_bytes": 1256,
+          "task_id": "django__django-13512"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 3686,
+          "task_id": "django__django-13513"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 476,
+          "task_id": "django__django-13516"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1557,
+          "task_id": "django__django-13551"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 672,
+          "task_id": "django__django-13568"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 519,
+          "task_id": "django__django-13569"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 823,
+          "task_id": "django__django-13590"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 854,
+          "task_id": "django__django-13658"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 476,
+          "task_id": "django__django-13670"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1209,
+          "task_id": "django__django-13741"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 935,
+          "task_id": "django__django-13786"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 610,
+          "task_id": "django__django-13794"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1917,
+          "task_id": "django__django-13807"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1222,
+          "task_id": "django__django-13809"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1176,
+          "task_id": "django__django-13810"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1408,
+          "task_id": "django__django-13820"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 623,
+          "task_id": "django__django-13821"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 1,
+          "patch_bytes": 1037,
+          "task_id": "django__django-13837"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 630,
+          "task_id": "django__django-13925"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 687,
+          "task_id": "django__django-13933"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 696,
+          "task_id": "django__django-13964"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 1,
+          "patch_bytes": 2029,
+          "task_id": "django__django-14007"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 2,
+          "patch_bytes": 2233,
+          "task_id": "django__django-14011"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 624,
+          "task_id": "django__django-14017"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1576,
+          "task_id": "django__django-14034"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 2122,
+          "task_id": "django__django-14053"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 391,
+          "task_id": "django__django-14089"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1126,
+          "task_id": "django__django-14122"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1026,
+          "task_id": "django__django-14140"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 949,
+          "task_id": "django__django-14155"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 3448,
+          "task_id": "django__django-14170"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 627,
+          "task_id": "django__django-14238"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 947,
+          "task_id": "django__django-14311"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 2,
+          "patch_bytes": 1077,
+          "task_id": "django__django-14315"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 926,
+          "task_id": "django__django-14349"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 770,
+          "task_id": "django__django-14351"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 476,
+          "task_id": "django__django-14373"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 2,
+          "patch_bytes": 1845,
+          "task_id": "django__django-14376"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 917,
+          "task_id": "django__django-14404"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1423,
+          "task_id": "django__django-14434"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 530,
+          "task_id": "django__django-14493"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1017,
+          "task_id": "django__django-14500"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 386,
+          "task_id": "django__django-14534"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 749,
+          "task_id": "django__django-14539"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1349,
+          "task_id": "django__django-14559"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 535,
+          "task_id": "django__django-14580"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 881,
+          "task_id": "django__django-14608"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 2,
+          "patch_bytes": 5201,
+          "task_id": "django__django-14631"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 511,
+          "task_id": "django__django-14672"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 2530,
+          "task_id": "django__django-14725"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1465,
+          "task_id": "django__django-14752"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 787,
+          "task_id": "django__django-14765"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 693,
+          "task_id": "django__django-14771"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 685,
+          "task_id": "django__django-14787"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 486,
+          "task_id": "django__django-14792"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 687,
+          "task_id": "django__django-14855"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 416,
+          "task_id": "django__django-14915"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1226,
+          "task_id": "django__django-14999"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1106,
+          "task_id": "django__django-15022"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1403,
+          "task_id": "django__django-15037"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 403,
+          "task_id": "django__django-15098"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 1606,
+          "task_id": "django__django-15103"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 590,
+          "task_id": "django__django-15104"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 732,
+          "task_id": "django__django-15127"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 1,
+          "patch_bytes": 3798,
+          "task_id": "django__django-15128"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1795,
+          "task_id": "django__django-15161"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 850,
+          "task_id": "django__django-15252"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 1,
+          "patch_bytes": 1228,
+          "task_id": "django__django-15268"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 653,
+          "task_id": "django__django-15277"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1128,
+          "task_id": "django__django-15278"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 929,
+          "task_id": "django__django-15280"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 665,
+          "task_id": "django__django-15315"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1214,
+          "task_id": "django__django-15368"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 733,
+          "task_id": "django__django-15375"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 827,
+          "task_id": "django__django-15380"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 959,
+          "task_id": "django__django-15382"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 702,
+          "task_id": "django__django-15467"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 906,
+          "task_id": "django__django-15499"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 1,
+          "patch_bytes": 3313,
+          "task_id": "django__django-15503"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 640,
+          "task_id": "django__django-15525"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 4891,
+          "task_id": "django__django-15554"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 2007,
+          "task_id": "django__django-15561"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 2588,
+          "task_id": "django__django-15563"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 481,
+          "task_id": "django__django-15569"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 855,
+          "task_id": "django__django-15572"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 4,
+          "patch_bytes": 5128,
+          "task_id": "django__django-15629"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 737,
+          "task_id": "django__django-15695"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 775,
+          "task_id": "django__django-15731"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 2829,
+          "task_id": "django__django-15732"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 458,
+          "task_id": "django__django-15741"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 598,
+          "task_id": "django__django-15814"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 514,
+          "task_id": "django__django-15851"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 427,
+          "task_id": "django__django-15863"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1709,
+          "task_id": "django__django-15916"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 857,
+          "task_id": "django__django-15930"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 1,
+          "patch_bytes": 3039,
+          "task_id": "django__django-15957"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 633,
+          "task_id": "django__django-15973"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 697,
+          "task_id": "django__django-15987"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 2191,
+          "task_id": "django__django-16032"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 356,
+          "task_id": "django__django-16082"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1677,
+          "task_id": "django__django-16100"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1265,
+          "task_id": "django__django-16116"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 753,
+          "task_id": "django__django-16136"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 697,
+          "task_id": "django__django-16139"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1156,
+          "task_id": "django__django-16145"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 539,
+          "task_id": "django__django-16255"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 5054,
+          "task_id": "django__django-16256"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 4,
+          "patch_bytes": 9785,
+          "task_id": "django__django-16263"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 2319,
+          "task_id": "django__django-16315"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 397,
+          "task_id": "django__django-16333"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 359,
+          "task_id": "django__django-16429"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 857,
+          "task_id": "django__django-16454"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 449,
+          "task_id": "django__django-16485"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 692,
+          "task_id": "django__django-16493"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 2176,
+          "task_id": "django__django-16502"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 581,
+          "task_id": "django__django-16527"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 2,
+          "patch_bytes": 10747,
+          "task_id": "django__django-16560"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 647,
+          "task_id": "django__django-16569"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 712,
+          "task_id": "django__django-16595"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 630,
+          "task_id": "django__django-16612"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 2,
+          "patch_bytes": 2723,
+          "task_id": "django__django-16631"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 632,
+          "task_id": "django__django-16642"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1152,
+          "task_id": "django__django-16661"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 765,
+          "task_id": "django__django-16662"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 529,
+          "task_id": "django__django-16667"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1451,
+          "task_id": "django__django-16801"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 641,
+          "task_id": "django__django-16819"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 628,
+          "task_id": "django__django-16877"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 875,
+          "task_id": "django__django-16899"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1316,
+          "task_id": "django__django-16901"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 1354,
+          "task_id": "django__django-16938"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 824,
+          "task_id": "django__django-16950"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 426,
+          "task_id": "django__django-17029"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1421,
+          "task_id": "django__django-17084"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 555,
+          "task_id": "django__django-17087"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 754,
+          "task_id": "django__django-7530"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 523,
+          "task_id": "django__django-9296"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 505,
+          "task_id": "matplotlib__matplotlib-13989"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 3,
+          "patch_bytes": 3862,
+          "task_id": "matplotlib__matplotlib-14623"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 928,
+          "task_id": "matplotlib__matplotlib-20488"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 838,
+          "task_id": "matplotlib__matplotlib-20676"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 774,
+          "task_id": "matplotlib__matplotlib-20826"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 979,
+          "task_id": "matplotlib__matplotlib-20859"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 743,
+          "task_id": "matplotlib__matplotlib-21568"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1122,
+          "task_id": "matplotlib__matplotlib-22719"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 844,
+          "task_id": "matplotlib__matplotlib-22865"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 722,
+          "task_id": "matplotlib__matplotlib-22871"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 646,
+          "task_id": "matplotlib__matplotlib-23299"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 421,
+          "task_id": "matplotlib__matplotlib-23314"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 654,
+          "task_id": "matplotlib__matplotlib-23412"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 519,
+          "task_id": "matplotlib__matplotlib-23476"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1615,
+          "task_id": "matplotlib__matplotlib-24026"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 972,
+          "task_id": "matplotlib__matplotlib-24149"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 637,
+          "task_id": "matplotlib__matplotlib-24177"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 679,
+          "task_id": "matplotlib__matplotlib-24570"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 627,
+          "task_id": "matplotlib__matplotlib-24627"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 802,
+          "task_id": "matplotlib__matplotlib-24637"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 3653,
+          "task_id": "matplotlib__matplotlib-24870"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1598,
+          "task_id": "matplotlib__matplotlib-24970"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1300,
+          "task_id": "matplotlib__matplotlib-25122"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1671,
+          "task_id": "matplotlib__matplotlib-25287"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 924,
+          "task_id": "matplotlib__matplotlib-25311"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 824,
+          "task_id": "matplotlib__matplotlib-25332"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 2,
+          "patch_bytes": 1187,
+          "task_id": "matplotlib__matplotlib-25479"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 3,
+          "patch_bytes": 5178,
+          "task_id": "matplotlib__matplotlib-25775"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 2269,
+          "task_id": "matplotlib__matplotlib-25960"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 602,
+          "task_id": "matplotlib__matplotlib-26113"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 627,
+          "task_id": "matplotlib__matplotlib-26208"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 583,
+          "task_id": "matplotlib__matplotlib-26291"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 687,
+          "task_id": "matplotlib__matplotlib-26342"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1783,
+          "task_id": "matplotlib__matplotlib-26466"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 2235,
+          "task_id": "mwaskom__seaborn-3069"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 1531,
+          "task_id": "mwaskom__seaborn-3187"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 390,
+          "task_id": "pallets__flask-5014"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 743,
+          "task_id": "psf__requests-1142"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 863,
+          "task_id": "psf__requests-1724"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 621,
+          "task_id": "psf__requests-1766"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 388,
+          "task_id": "psf__requests-1921"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 763,
+          "task_id": "psf__requests-2317"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 723,
+          "task_id": "psf__requests-2931"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 511,
+          "task_id": "psf__requests-5414"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 454,
+          "task_id": "psf__requests-6028"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 529,
+          "task_id": "pydata__xarray-2905"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 4029,
+          "task_id": "pydata__xarray-3095"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1331,
+          "task_id": "pydata__xarray-3151"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 2945,
+          "task_id": "pydata__xarray-3305"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 422,
+          "task_id": "pydata__xarray-3677"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 2,
+          "patch_bytes": 4058,
+          "task_id": "pydata__xarray-3993"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 823,
+          "task_id": "pydata__xarray-4075"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 517,
+          "task_id": "pydata__xarray-4094"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 808,
+          "task_id": "pydata__xarray-4356"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 471,
+          "task_id": "pydata__xarray-4629"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1539,
+          "task_id": "pydata__xarray-4687"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 559,
+          "task_id": "pydata__xarray-4695"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 983,
+          "task_id": "pydata__xarray-4966"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 697,
+          "task_id": "pydata__xarray-6461"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 779,
+          "task_id": "pydata__xarray-6599"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 452,
+          "task_id": "pydata__xarray-6721"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1309,
+          "task_id": "pydata__xarray-6744"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 3179,
+          "task_id": "pydata__xarray-6938"
+        },
+        {
+          "difficulty": ">4 hours",
+          "file_count": 2,
+          "patch_bytes": 8857,
+          "task_id": "pydata__xarray-6992"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 2032,
+          "task_id": "pydata__xarray-7229"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 605,
+          "task_id": "pydata__xarray-7233"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 603,
+          "task_id": "pydata__xarray-7393"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 4,
+          "patch_bytes": 6862,
+          "task_id": "pylint-dev__pylint-4551"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 1098,
+          "task_id": "pylint-dev__pylint-4604"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 1835,
+          "task_id": "pylint-dev__pylint-4661"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 520,
+          "task_id": "pylint-dev__pylint-4970"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 4,
+          "patch_bytes": 3027,
+          "task_id": "pylint-dev__pylint-6386"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 3095,
+          "task_id": "pylint-dev__pylint-6528"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 558,
+          "task_id": "pylint-dev__pylint-6903"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 417,
+          "task_id": "pylint-dev__pylint-7080"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 703,
+          "task_id": "pylint-dev__pylint-7277"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 3,
+          "patch_bytes": 2614,
+          "task_id": "pylint-dev__pylint-8898"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1119,
+          "task_id": "pytest-dev__pytest-10051"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 908,
+          "task_id": "pytest-dev__pytest-10081"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 1,
+          "patch_bytes": 2091,
+          "task_id": "pytest-dev__pytest-10356"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 437,
+          "task_id": "pytest-dev__pytest-5262"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1016,
+          "task_id": "pytest-dev__pytest-5631"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 1,
+          "patch_bytes": 9824,
+          "task_id": "pytest-dev__pytest-5787"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 657,
+          "task_id": "pytest-dev__pytest-5809"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 3526,
+          "task_id": "pytest-dev__pytest-5840"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 1,
+          "patch_bytes": 1868,
+          "task_id": "pytest-dev__pytest-6197"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 432,
+          "task_id": "pytest-dev__pytest-6202"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 572,
+          "task_id": "pytest-dev__pytest-7205"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1686,
+          "task_id": "pytest-dev__pytest-7236"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1245,
+          "task_id": "pytest-dev__pytest-7324"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 456,
+          "task_id": "pytest-dev__pytest-7432"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1711,
+          "task_id": "pytest-dev__pytest-7490"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 446,
+          "task_id": "pytest-dev__pytest-7521"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1307,
+          "task_id": "pytest-dev__pytest-7571"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 441,
+          "task_id": "pytest-dev__pytest-7982"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 2450,
+          "task_id": "pytest-dev__pytest-8399"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 3739,
+          "task_id": "scikit-learn__scikit-learn-10297"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 892,
+          "task_id": "scikit-learn__scikit-learn-10844"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 525,
+          "task_id": "scikit-learn__scikit-learn-10908"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1844,
+          "task_id": "scikit-learn__scikit-learn-11310"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 575,
+          "task_id": "scikit-learn__scikit-learn-11578"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 519,
+          "task_id": "scikit-learn__scikit-learn-12585"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 13568,
+          "task_id": "scikit-learn__scikit-learn-12682"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1465,
+          "task_id": "scikit-learn__scikit-learn-12973"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1078,
+          "task_id": "scikit-learn__scikit-learn-13124"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 674,
+          "task_id": "scikit-learn__scikit-learn-13135"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1155,
+          "task_id": "scikit-learn__scikit-learn-13142"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 603,
+          "task_id": "scikit-learn__scikit-learn-13328"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 502,
+          "task_id": "scikit-learn__scikit-learn-13439"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1285,
+          "task_id": "scikit-learn__scikit-learn-13496"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 563,
+          "task_id": "scikit-learn__scikit-learn-13779"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 558,
+          "task_id": "scikit-learn__scikit-learn-14053"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1392,
+          "task_id": "scikit-learn__scikit-learn-14087"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 314,
+          "task_id": "scikit-learn__scikit-learn-14141"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 3809,
+          "task_id": "scikit-learn__scikit-learn-14496"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1658,
+          "task_id": "scikit-learn__scikit-learn-14629"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 927,
+          "task_id": "scikit-learn__scikit-learn-14710"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1050,
+          "task_id": "scikit-learn__scikit-learn-14894"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 927,
+          "task_id": "scikit-learn__scikit-learn-14983"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 808,
+          "task_id": "scikit-learn__scikit-learn-15100"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 2,
+          "patch_bytes": 3888,
+          "task_id": "scikit-learn__scikit-learn-25102"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 2301,
+          "task_id": "scikit-learn__scikit-learn-25232"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 746,
+          "task_id": "scikit-learn__scikit-learn-25747"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1701,
+          "task_id": "scikit-learn__scikit-learn-25931"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 2410,
+          "task_id": "scikit-learn__scikit-learn-25973"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1850,
+          "task_id": "scikit-learn__scikit-learn-26194"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 771,
+          "task_id": "scikit-learn__scikit-learn-26323"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1694,
+          "task_id": "scikit-learn__scikit-learn-9288"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 728,
+          "task_id": "sphinx-doc__sphinx-10323"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 886,
+          "task_id": "sphinx-doc__sphinx-10435"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1798,
+          "task_id": "sphinx-doc__sphinx-10449"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 685,
+          "task_id": "sphinx-doc__sphinx-10466"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1276,
+          "task_id": "sphinx-doc__sphinx-10614"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 3,
+          "patch_bytes": 5462,
+          "task_id": "sphinx-doc__sphinx-10673"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1508,
+          "task_id": "sphinx-doc__sphinx-11445"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 1,
+          "patch_bytes": 2867,
+          "task_id": "sphinx-doc__sphinx-11510"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 990,
+          "task_id": "sphinx-doc__sphinx-7440"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 697,
+          "task_id": "sphinx-doc__sphinx-7454"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 2,
+          "patch_bytes": 1684,
+          "task_id": "sphinx-doc__sphinx-7462"
+        },
+        {
+          "difficulty": ">4 hours",
+          "file_count": 3,
+          "patch_bytes": 10055,
+          "task_id": "sphinx-doc__sphinx-7590"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 5740,
+          "task_id": "sphinx-doc__sphinx-7748"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1738,
+          "task_id": "sphinx-doc__sphinx-7757"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 679,
+          "task_id": "sphinx-doc__sphinx-7889"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 861,
+          "task_id": "sphinx-doc__sphinx-7910"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1472,
+          "task_id": "sphinx-doc__sphinx-7985"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 4802,
+          "task_id": "sphinx-doc__sphinx-8035"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1878,
+          "task_id": "sphinx-doc__sphinx-8056"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 1740,
+          "task_id": "sphinx-doc__sphinx-8120"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1560,
+          "task_id": "sphinx-doc__sphinx-8265"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 594,
+          "task_id": "sphinx-doc__sphinx-8269"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 733,
+          "task_id": "sphinx-doc__sphinx-8459"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 994,
+          "task_id": "sphinx-doc__sphinx-8475"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 2,
+          "patch_bytes": 3907,
+          "task_id": "sphinx-doc__sphinx-8548"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 1205,
+          "task_id": "sphinx-doc__sphinx-8551"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 4830,
+          "task_id": "sphinx-doc__sphinx-8593"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 625,
+          "task_id": "sphinx-doc__sphinx-8595"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 501,
+          "task_id": "sphinx-doc__sphinx-8621"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 653,
+          "task_id": "sphinx-doc__sphinx-8638"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 573,
+          "task_id": "sphinx-doc__sphinx-8721"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 1,
+          "patch_bytes": 1666,
+          "task_id": "sphinx-doc__sphinx-9229"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 533,
+          "task_id": "sphinx-doc__sphinx-9230"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 668,
+          "task_id": "sphinx-doc__sphinx-9258"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1248,
+          "task_id": "sphinx-doc__sphinx-9281"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 736,
+          "task_id": "sphinx-doc__sphinx-9320"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 759,
+          "task_id": "sphinx-doc__sphinx-9367"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 3,
+          "patch_bytes": 4777,
+          "task_id": "sphinx-doc__sphinx-9461"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 540,
+          "task_id": "sphinx-doc__sphinx-9591"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1732,
+          "task_id": "sphinx-doc__sphinx-9602"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1042,
+          "task_id": "sphinx-doc__sphinx-9658"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 817,
+          "task_id": "sphinx-doc__sphinx-9673"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 638,
+          "task_id": "sphinx-doc__sphinx-9698"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1284,
+          "task_id": "sphinx-doc__sphinx-9711"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 925,
+          "task_id": "sympy__sympy-11618"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 505,
+          "task_id": "sympy__sympy-12096"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1327,
+          "task_id": "sympy__sympy-12419"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 760,
+          "task_id": "sympy__sympy-12481"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 1,
+          "patch_bytes": 9648,
+          "task_id": "sympy__sympy-12489"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1047,
+          "task_id": "sympy__sympy-13031"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 21,
+          "patch_bytes": 17385,
+          "task_id": "sympy__sympy-13091"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 736,
+          "task_id": "sympy__sympy-13372"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 556,
+          "task_id": "sympy__sympy-13480"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 680,
+          "task_id": "sympy__sympy-13551"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 871,
+          "task_id": "sympy__sympy-13615"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 495,
+          "task_id": "sympy__sympy-13647"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 360,
+          "task_id": "sympy__sympy-13757"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1343,
+          "task_id": "sympy__sympy-13798"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 1,
+          "patch_bytes": 2593,
+          "task_id": "sympy__sympy-13852"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 3483,
+          "task_id": "sympy__sympy-13877"
+        },
+        {
+          "difficulty": ">4 hours",
+          "file_count": 1,
+          "patch_bytes": 14547,
+          "task_id": "sympy__sympy-13878"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 3590,
+          "task_id": "sympy__sympy-13974"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 3,
+          "patch_bytes": 3801,
+          "task_id": "sympy__sympy-14248"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 5583,
+          "task_id": "sympy__sympy-14531"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 403,
+          "task_id": "sympy__sympy-14711"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 585,
+          "task_id": "sympy__sympy-14976"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 566,
+          "task_id": "sympy__sympy-15017"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 808,
+          "task_id": "sympy__sympy-15345"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 441,
+          "task_id": "sympy__sympy-15349"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1507,
+          "task_id": "sympy__sympy-15599"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 498,
+          "task_id": "sympy__sympy-15809"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 396,
+          "task_id": "sympy__sympy-15875"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 2040,
+          "task_id": "sympy__sympy-15976"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 511,
+          "task_id": "sympy__sympy-16450"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 6,
+          "patch_bytes": 10210,
+          "task_id": "sympy__sympy-16597"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 583,
+          "task_id": "sympy__sympy-16766"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1793,
+          "task_id": "sympy__sympy-16792"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 428,
+          "task_id": "sympy__sympy-16886"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 410,
+          "task_id": "sympy__sympy-17139"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 1427,
+          "task_id": "sympy__sympy-17318"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 1,
+          "patch_bytes": 589,
+          "task_id": "sympy__sympy-17630"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 505,
+          "task_id": "sympy__sympy-17655"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 621,
+          "task_id": "sympy__sympy-18189"
+        },
+        {
+          "difficulty": "1-4 hours",
+          "file_count": 1,
+          "patch_bytes": 2838,
+          "task_id": "sympy__sympy-18199"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 933,
+          "task_id": "sympy__sympy-18211"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1126,
+          "task_id": "sympy__sympy-18698"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 588,
+          "task_id": "sympy__sympy-18763"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 378,
+          "task_id": "sympy__sympy-19040"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 741,
+          "task_id": "sympy__sympy-19346"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 2106,
+          "task_id": "sympy__sympy-19495"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 421,
+          "task_id": "sympy__sympy-19637"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 1218,
+          "task_id": "sympy__sympy-19783"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1523,
+          "task_id": "sympy__sympy-19954"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1559,
+          "task_id": "sympy__sympy-20154"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 418,
+          "task_id": "sympy__sympy-20428"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 3,
+          "patch_bytes": 2873,
+          "task_id": "sympy__sympy-20438"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 611,
+          "task_id": "sympy__sympy-20590"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 731,
+          "task_id": "sympy__sympy-20801"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 744,
+          "task_id": "sympy__sympy-20916"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1007,
+          "task_id": "sympy__sympy-21379"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 2659,
+          "task_id": "sympy__sympy-21596"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 541,
+          "task_id": "sympy__sympy-21612"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 1015,
+          "task_id": "sympy__sympy-21847"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1007,
+          "task_id": "sympy__sympy-21930"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 2,
+          "patch_bytes": 1617,
+          "task_id": "sympy__sympy-22080"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1400,
+          "task_id": "sympy__sympy-22456"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 669,
+          "task_id": "sympy__sympy-22714"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 277,
+          "task_id": "sympy__sympy-22914"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 649,
+          "task_id": "sympy__sympy-23262"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1296,
+          "task_id": "sympy__sympy-23413"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 365,
+          "task_id": "sympy__sympy-23534"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 632,
+          "task_id": "sympy__sympy-23824"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 293,
+          "task_id": "sympy__sympy-23950"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 883,
+          "task_id": "sympy__sympy-24066"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 655,
+          "task_id": "sympy__sympy-24213"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 2511,
+          "task_id": "sympy__sympy-24443"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 779,
+          "task_id": "sympy__sympy-24539"
+        },
+        {
+          "difficulty": "<15 min fix",
+          "file_count": 1,
+          "patch_bytes": 745,
+          "task_id": "sympy__sympy-24562"
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "file_count": 1,
+          "patch_bytes": 1183,
+          "task_id": "sympy__sympy-24661"
+        }
+      ]
+    }
+  },
+  "evidence": {
+    "codex_db_sha256": "d67d139fc2dd9fb321ece77d33eafb0ed359a17ffdbd5883d17d5fc1f0bf6d4c",
+    "main_db_sha256": "55126df63458da0347ab77dc5fda03114ca3bd15ee66debb8675aafe11c6d1b4",
+    "pro": {
+      "kind": "public_summary_fallback",
+      "sha256": "ab7343137c732e9abfe97d0c367e2fdb948f5dc42f52f0e89da601afd68772eb"
+    },
+    "verified_arrow_sha256": "0d119efe73413554335bd410a04d82fd4a586bfd312cee677ee40af5de2ac46e"
+  },
+  "exit_audit": {
+    "arms": {
+      "codex": {
+        "exit_distribution": [
+          {
+            "count": 16,
+            "exit_reason": "Submitted",
+            "status": "ok"
+          }
+        ],
+        "run_count": 16,
+        "wall": {
+          "available": 16,
+          "max": 840.0429815000025,
+          "median": 428.8733745499994,
+          "min": 200.95861770000192,
+          "missing": 0,
+          "nearest": [
+            {
+              "distance_to_3600_s": 2759.9570184999975,
+              "run_id": "run-c9996628da1a",
+              "task_id": "sympy__sympy-20438",
+              "wall_ratio": 0.23334527263888957,
+              "wall_time_s": 840.0429815000025
+            },
+            {
+              "distance_to_3600_s": 2834.4701203000004,
+              "run_id": "run-d6506659ff22",
+              "task_id": "astropy__astropy-14369",
+              "wall_ratio": 0.21264718880555544,
+              "wall_time_s": 765.5298796999996
+            },
+            {
+              "distance_to_3600_s": 2860.931906800004,
+              "run_id": "run-d5ac625c5fd7",
+              "task_id": "scikit-learn__scikit-learn-12682",
+              "wall_ratio": 0.2052966925555544,
+              "wall_time_s": 739.0680931999959
+            },
+            {
+              "distance_to_3600_s": 2898.4999704,
+              "run_id": "run-119072354eef",
+              "task_id": "matplotlib__matplotlib-25960",
+              "wall_ratio": 0.19486111933333328,
+              "wall_time_s": 701.5000295999998
+            },
+            {
+              "distance_to_3600_s": 2987.623339699996,
+              "run_id": "run-8343826458d3",
+              "task_id": "scikit-learn__scikit-learn-25102",
+              "wall_ratio": 0.17010462786111222,
+              "wall_time_s": 612.376660300004
+            }
+          ],
+          "p95": 784.1581551500003,
+          "within_120s": 0,
+          "within_300s": 0,
+          "within_60s": 0
+        }
+      },
+      "flash": {
+        "exit_distribution": [
+          {
+            "count": 3,
+            "exit_reason": "APIError",
+            "status": "agent_error"
+          },
+          {
+            "count": 2,
+            "exit_reason": "ContextWindowExceededError",
+            "status": "agent_error"
+          },
+          {
+            "count": 5,
+            "exit_reason": "LimitsExceeded",
+            "status": "budget"
+          },
+          {
+            "count": 22,
+            "exit_reason": "Submitted",
+            "status": "ok"
+          }
+        ],
+        "run_count": 32,
+        "wall": {
+          "available": 32,
+          "max": 874.9453695609991,
+          "median": 337.74128573149983,
+          "min": 39.488121158996364,
+          "missing": 0,
+          "nearest": [
+            {
+              "distance_to_3600_s": 2725.054630439001,
+              "run_id": "run-77221c364196",
+              "task_id": "scikit-learn__scikit-learn-25102",
+              "wall_ratio": 0.24304038043361087,
+              "wall_time_s": 874.9453695609991
+            },
+            {
+              "distance_to_3600_s": 2875.233472224005,
+              "run_id": "run-b7303ccf378f",
+              "task_id": "pydata__xarray-7229",
+              "wall_ratio": 0.201324035493332,
+              "wall_time_s": 724.7665277759952
+            },
+            {
+              "distance_to_3600_s": 2983.2637580610026,
+              "run_id": "run-0250a8073a8c",
+              "task_id": "scikit-learn__scikit-learn-12682",
+              "wall_ratio": 0.17131562276083262,
+              "wall_time_s": 616.7362419389974
+            },
+            {
+              "distance_to_3600_s": 2984.871017055004,
+              "run_id": "run-8013db2a5ade",
+              "task_id": "matplotlib__matplotlib-25960",
+              "wall_ratio": 0.17086916192916557,
+              "wall_time_s": 615.1289829449961
+            },
+            {
+              "distance_to_3600_s": 3068.9996474189975,
+              "run_id": "run-f1fc21f63b98",
+              "task_id": "scikit-learn__scikit-learn-25102",
+              "wall_ratio": 0.14750009793916738,
+              "wall_time_s": 531.0003525810025
+            }
+          ],
+          "p95": 665.3498705656464,
+          "within_120s": 0,
+          "within_300s": 0,
+          "within_60s": 0
+        }
+      },
+      "mimo": {
+        "exit_distribution": [
+          {
+            "count": 1,
+            "exit_reason": "LimitsExceeded",
+            "status": "budget"
+          },
+          {
+            "count": 31,
+            "exit_reason": "Submitted",
+            "status": "ok"
+          }
+        ],
+        "run_count": 32,
+        "wall": {
+          "available": 32,
+          "max": 1022.5801403730002,
+          "median": 330.08552229949873,
+          "min": 22.20794656399812,
+          "missing": 0,
+          "nearest": [
+            {
+              "distance_to_3600_s": 2577.419859627,
+              "run_id": "run-d561a0ca719f",
+              "task_id": "astropy__astropy-14369",
+              "wall_ratio": 0.28405003899250003,
+              "wall_time_s": 1022.5801403730002
+            },
+            {
+              "distance_to_3600_s": 2593.577131399001,
+              "run_id": "run-f8ece7e738c9",
+              "task_id": "scikit-learn__scikit-learn-25102",
+              "wall_ratio": 0.279561907944722,
+              "wall_time_s": 1006.4228686009992
+            },
+            {
+              "distance_to_3600_s": 2709.6040669270005,
+              "run_id": "run-036340dd98e5",
+              "task_id": "astropy__astropy-14369",
+              "wall_ratio": 0.24733220363138875,
+              "wall_time_s": 890.3959330729995
+            },
+            {
+              "distance_to_3600_s": 2744.639760783997,
+              "run_id": "run-a99d1f765f7e",
+              "task_id": "scikit-learn__scikit-learn-25102",
+              "wall_ratio": 0.23760006644888967,
+              "wall_time_s": 855.3602392160028
+            },
+            {
+              "distance_to_3600_s": 2775.2138767359975,
+              "run_id": "run-c054002b8a85",
+              "task_id": "scikit-learn__scikit-learn-12682",
+              "wall_ratio": 0.22910725646222294,
+              "wall_time_s": 824.7861232640025
+            }
+          ],
+          "p95": 942.6080540605992,
+          "within_120s": 0,
+          "within_300s": 0,
+          "within_60s": 0
+        }
+      },
+      "pro": {
+        "exit_distribution": [
+          {
+            "count": 4,
+            "exit_reason": "APIError",
+            "status": "agent_error"
+          },
+          {
+            "count": 3,
+            "exit_reason": "ContextWindowExceededError",
+            "status": "agent_error"
+          },
+          {
+            "count": 9,
+            "exit_reason": "Submitted",
+            "status": "ok"
+          }
+        ],
+        "run_count": 16,
+        "wall": {
+          "available": 0,
+          "missing": 16,
+          "reason": "source has no wall_time_s"
+        }
+      }
+    },
+    "exit_distribution": [
+      {
+        "count": 7,
+        "exit_reason": "APIError",
+        "status": "agent_error"
+      },
+      {
+        "count": 5,
+        "exit_reason": "ContextWindowExceededError",
+        "status": "agent_error"
+      },
+      {
+        "count": 6,
+        "exit_reason": "LimitsExceeded",
+        "status": "budget"
+      },
+      {
+        "count": 78,
+        "exit_reason": "Submitted",
+        "status": "ok"
+      }
+    ],
+    "total_runs": 96
+  },
+  "matrix": {
+    "rows": [
+      {
+        "arms": {
+          "codex": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 1.0,
+            "passed": 1,
+            "repetitions": 1
+          },
+          "flash": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 1.0,
+            "passed": 2,
+            "repetitions": 2
+          },
+          "mimo": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 1.0,
+            "passed": 2,
+            "repetitions": 2
+          },
+          "pro": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 1.0,
+            "passed": 1,
+            "repetitions": 1
+          }
+        },
+        "task_id": "pytest-dev__pytest-7982"
+      },
+      {
+        "arms": {
+          "codex": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          },
+          "flash": {
+            "exits": [
+              {
+                "exit_reason": "LimitsExceeded",
+                "status": "budget"
+              },
+              {
+                "exit_reason": "LimitsExceeded",
+                "status": "budget"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 2
+          },
+          "mimo": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 2
+          },
+          "pro": {
+            "exits": [
+              {
+                "exit_reason": "APIError",
+                "status": "agent_error"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          }
+        },
+        "task_id": "sympy__sympy-20438"
+      },
+      {
+        "arms": {
+          "codex": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 1.0,
+            "passed": 1,
+            "repetitions": 1
+          },
+          "flash": {
+            "exits": [
+              {
+                "exit_reason": "APIError",
+                "status": "agent_error"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 1.0,
+            "passed": 2,
+            "repetitions": 2
+          },
+          "mimo": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 1.0,
+            "passed": 2,
+            "repetitions": 2
+          },
+          "pro": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 1.0,
+            "passed": 1,
+            "repetitions": 1
+          }
+        },
+        "task_id": "django__django-16315"
+      },
+      {
+        "arms": {
+          "codex": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          },
+          "flash": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 2
+          },
+          "mimo": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 2
+          },
+          "pro": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          }
+        },
+        "task_id": "pydata__xarray-7229"
+      },
+      {
+        "arms": {
+          "codex": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          },
+          "flash": {
+            "exits": [
+              {
+                "exit_reason": "ContextWindowExceededError",
+                "status": "agent_error"
+              },
+              {
+                "exit_reason": "APIError",
+                "status": "agent_error"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 2
+          },
+          "mimo": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 2
+          },
+          "pro": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          }
+        },
+        "task_id": "scikit-learn__scikit-learn-12682"
+      },
+      {
+        "arms": {
+          "codex": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 1.0,
+            "passed": 1,
+            "repetitions": 1
+          },
+          "flash": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 2
+          },
+          "mimo": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 2
+          },
+          "pro": {
+            "exits": [
+              {
+                "exit_reason": "APIError",
+                "status": "agent_error"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          }
+        },
+        "task_id": "astropy__astropy-14369"
+      },
+      {
+        "arms": {
+          "codex": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          },
+          "flash": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "APIError",
+                "status": "agent_error"
+              }
+            ],
+            "pass_rate": 0.5,
+            "passed": 1,
+            "repetitions": 2
+          },
+          "mimo": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 2
+          },
+          "pro": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          }
+        },
+        "task_id": "django__django-14376"
+      },
+      {
+        "arms": {
+          "codex": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          },
+          "flash": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 2
+          },
+          "mimo": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 2
+          },
+          "pro": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          }
+        },
+        "task_id": "matplotlib__matplotlib-22871"
+      },
+      {
+        "arms": {
+          "codex": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          },
+          "flash": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.5,
+            "passed": 1,
+            "repetitions": 2
+          },
+          "mimo": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 2
+          },
+          "pro": {
+            "exits": [
+              {
+                "exit_reason": "APIError",
+                "status": "agent_error"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          }
+        },
+        "task_id": "matplotlib__matplotlib-25960"
+      },
+      {
+        "arms": {
+          "codex": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 1.0,
+            "passed": 1,
+            "repetitions": 1
+          },
+          "flash": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 1.0,
+            "passed": 2,
+            "repetitions": 2
+          },
+          "mimo": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 1.0,
+            "passed": 2,
+            "repetitions": 2
+          },
+          "pro": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 1.0,
+            "passed": 1,
+            "repetitions": 1
+          }
+        },
+        "task_id": "psf__requests-1142"
+      },
+      {
+        "arms": {
+          "codex": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          },
+          "flash": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.5,
+            "passed": 1,
+            "repetitions": 2
+          },
+          "mimo": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 2
+          },
+          "pro": {
+            "exits": [
+              {
+                "exit_reason": "ContextWindowExceededError",
+                "status": "agent_error"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          }
+        },
+        "task_id": "pydata__xarray-3677"
+      },
+      {
+        "arms": {
+          "codex": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          },
+          "flash": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.5,
+            "passed": 1,
+            "repetitions": 2
+          },
+          "mimo": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 2
+          },
+          "pro": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          }
+        },
+        "task_id": "pytest-dev__pytest-7490"
+      },
+      {
+        "arms": {
+          "codex": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 1.0,
+            "passed": 1,
+            "repetitions": 1
+          },
+          "flash": {
+            "exits": [
+              {
+                "exit_reason": "LimitsExceeded",
+                "status": "budget"
+              },
+              {
+                "exit_reason": "LimitsExceeded",
+                "status": "budget"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 2
+          },
+          "mimo": {
+            "exits": [
+              {
+                "exit_reason": "LimitsExceeded",
+                "status": "budget"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.5,
+            "passed": 1,
+            "repetitions": 2
+          },
+          "pro": {
+            "exits": [
+              {
+                "exit_reason": "APIError",
+                "status": "agent_error"
+              }
+            ],
+            "pass_rate": 1.0,
+            "passed": 1,
+            "repetitions": 1
+          }
+        },
+        "task_id": "scikit-learn__scikit-learn-25102"
+      },
+      {
+        "arms": {
+          "codex": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          },
+          "flash": {
+            "exits": [
+              {
+                "exit_reason": "ContextWindowExceededError",
+                "status": "agent_error"
+              },
+              {
+                "exit_reason": "LimitsExceeded",
+                "status": "budget"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 2
+          },
+          "mimo": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 2
+          },
+          "pro": {
+            "exits": [
+              {
+                "exit_reason": "ContextWindowExceededError",
+                "status": "agent_error"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          }
+        },
+        "task_id": "sphinx-doc__sphinx-8593"
+      },
+      {
+        "arms": {
+          "codex": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          },
+          "flash": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 2
+          },
+          "mimo": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 2
+          },
+          "pro": {
+            "exits": [
+              {
+                "exit_reason": "ContextWindowExceededError",
+                "status": "agent_error"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          }
+        },
+        "task_id": "sphinx-doc__sphinx-8721"
+      },
+      {
+        "arms": {
+          "codex": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 1.0,
+            "passed": 1,
+            "repetitions": 1
+          },
+          "flash": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 2
+          },
+          "mimo": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              },
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 2
+          },
+          "pro": {
+            "exits": [
+              {
+                "exit_reason": "Submitted",
+                "status": "ok"
+              }
+            ],
+            "pass_rate": 0.0,
+            "passed": 0,
+            "repetitions": 1
+          }
+        },
+        "task_id": "sympy__sympy-17318"
+      }
+    ],
+    "strict_all_fail": [
+      "sympy__sympy-20438",
+      "pydata__xarray-7229",
+      "scikit-learn__scikit-learn-12682",
+      "matplotlib__matplotlib-22871",
+      "sphinx-doc__sphinx-8593",
+      "sphinx-doc__sphinx-8721"
+    ],
+    "tie_sensitive": [
+      "django__django-14376",
+      "matplotlib__matplotlib-25960",
+      "pydata__xarray-3677",
+      "pytest-dev__pytest-7490"
+    ]
+  },
+  "run_accounting": {
+    "actual": 96,
+    "expected": 96
+  },
+  "schema_version": "m4d-1",
+  "task_set_sha256": "eeb30802a00dd865cfc7214dc6ab123f267f1f92b9e5d3a4d21869bf4fb152be",
+  "test_runtime": {
+    "definition": "SWE-bench harness 'Test runtime' from run_instance.log",
+    "logs_inspected": 0,
+    "reason": "archived official reports do not retain run_instance.log",
+    "status": "unavailable",
+    "values_found": 0,
+    "verified_500_comparison": "unavailable: the frozen dataset has no test-runtime field"
+  }
+}
