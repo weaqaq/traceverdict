@@ -22,7 +22,7 @@ The public v0.2 CLI has ten top-level commands: `run`, `suite`, `compare`, `repo
 
 Daily Mode is self-suite-only. `quick` runs S1/S4/S6, `quick --full` runs S1-S8 while reusing completed smoke tasks, and the 16-task SWE-bench set is prohibited. Configs are content-addressed immutable derivatives of a canonical parent, sorted overrides, prompt identity, and strict price-registry identity. Cached baselines live only in ignored local state; promotion never starts a model and requires explicit acceptance of a correctness/forbidden regression.
 
-Passive `ingest` starts no agent, Docker container, or verifier. It incrementally processes stable Codex exec JSONL and a separately versioned observed desktop-rollout format, persists metrics only, detects truncation/prefix rewrites, and fails closed on required usage drift.
+Passive `ingest` starts no agent, Docker container, or verifier. It incrementally processes stable Codex exec JSONL and a separately versioned observed desktop-rollout format, persists metrics only, detects truncation/prefix rewrites, and fails closed on required usage drift. Rollout format v2 differs from v1 only by counting and skipping a `token_count` event when its entire `info` value is null; any non-null `info` missing `total_token_usage` still fails closed.
 
 ## 5. Reproducibility and honesty rules
 

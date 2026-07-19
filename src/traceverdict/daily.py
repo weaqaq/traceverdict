@@ -156,7 +156,7 @@ def derive_config(
         model_name=model,
         model_params=model_params,
         litellm_model_registry=str(registry),
-        harness_version="0.2.1",
+        harness_version="0.2.2",
         notes=f"daily parent={raw.get('config_id')} identity_sha256={digest}",
     )
     output = Path(output_dir) / f"{derived['config_id']}.yaml"

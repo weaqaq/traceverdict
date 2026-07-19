@@ -188,7 +188,13 @@ def _ingest_echo(result: dict, as_json: bool) -> None:
     from rich.console import Console
     from rich.table import Table
 
-    table = Table(title=f"Passive ingest — {result['sources_updated']} source(s) updated")
+    table = Table(
+        title=(
+            f"Passive ingest — {result['sources_updated']} source(s) updated; "
+            f"token events={result['token_count_events']}; "
+            f"null heartbeats={result['null_usage_heartbeats']}"
+        )
+    )
     for name in ("UTC date", "model", "tokens in/cached/out/reasoning", "turns", "tools", "failures", "open"):
         table.add_column(name)
     for row in sorted(result["last_7_days"], key=lambda item: (item["date_utc"], item["model"])):

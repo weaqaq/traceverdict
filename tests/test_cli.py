@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from unittest.mock import patch
 
 from click import unstyle
@@ -38,10 +39,9 @@ def test_help_lists_ten_subcommands() -> None:
 
 
 def test_v02_version_and_tv_alias() -> None:
-    from pathlib import Path
     text = Path("pyproject.toml").read_text(encoding="utf-8")
-    assert __version__ == "0.2.1"
-    assert 'version = "0.2.1"' in text
+    assert __version__ == "0.2.2"
+    assert 'version = "0.2.2"' in text
     assert '"litellm==1.91.1"' in text
     assert 'tv = "traceverdict.cli:app"' in text
 
@@ -61,6 +61,27 @@ def test_daily_help_contract() -> None:
         assert result.exit_code == 0
     result = runner.invoke(app, ["baseline", "--help"])
     assert "set" in result.stdout and "update" in result.stdout
+
+
+def test_ingest_json_and_rich_disclose_heartbeat_counts(tmp_path: Path) -> None:
+    source = tmp_path / "rollout.jsonl"
+    source.write_text(json.dumps({
+        "timestamp": "2026-07-19T00:00:00Z",
+        "type": "event_msg",
+        "payload": {"type": "token_count", "info": None},
+    }) + "\n", encoding="utf-8")
+    json_state = tmp_path / "json-state"
+    result = runner.invoke(app, ["ingest", str(source), "--json", "--state-dir", str(json_state)])
+    assert result.exit_code == 0
+    value = json.loads(result.stdout)
+    assert value["token_count_events"] == 1
+    assert value["null_usage_heartbeats"] == 1
+
+    rich_state = tmp_path / "rich-state"
+    result = runner.invoke(app, ["ingest", str(source), "--state-dir", str(rich_state)])
+    assert result.exit_code == 0
+    assert "token events=1" in result.stdout
+    assert "null heartbeats=1" in result.stdout
 
 
 def test_baseline_set_uses_packaged_default_when_checkout_path_is_absent(

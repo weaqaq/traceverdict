@@ -13,7 +13,9 @@ from typing import Any, Iterable
 from traceverdict.tracer.codex_jsonl import _usage as exec_usage
 from traceverdict.tracer.trajectory import TrajectoryFormatError
 
-ROLLOUT_FORMAT = "codex-rollout-jsonl-observed-2026-07-v1"
+ROLLOUT_FORMAT_V1 = "codex-rollout-jsonl-observed-2026-07-v1"
+ROLLOUT_FORMAT = "codex-rollout-jsonl-observed-2026-07-v2"
+ROLLOUT_FORMATS = frozenset({ROLLOUT_FORMAT_V1, ROLLOUT_FORMAT})
 STATE_VERSION = 1
 TOKEN_KEYS = ("input_tokens", "cached_input_tokens", "output_tokens", "reasoning_output_tokens")
 
@@ -80,11 +82,15 @@ def _blank(date: str, model: str) -> dict[str, Any]:
         "reasoning_output_tokens": 0, "turns": 0, "tool_calls": 0,
         "failures": {k: 0 for k in ("budget/rate_limit", "aborted", "agent_error", "loop", "incomplete", "other")},
         "unknown_events": {}, "open_turns": 0,
+        "token_count_events": 0, "null_usage_heartbeats": 0,
     }
 
 
 def _merge(target: dict[str, Any], delta: dict[str, Any]) -> None:
-    for key in (*TOKEN_KEYS, "turns", "tool_calls", "open_turns"):
+    for key in (
+        *TOKEN_KEYS, "turns", "tool_calls", "open_turns",
+        "token_count_events", "null_usage_heartbeats",
+    ):
         target[key] = int(target.get(key, 0)) + int(delta.get(key, 0))
     for key, value in delta.get("failures", {}).items():
         target["failures"][key] = target["failures"].get(key, 0) + int(value)
@@ -163,7 +169,12 @@ def _parse_rollout(
             open_ids.discard(str(payload.get("turn_id")))
             out["failures"]["aborted"] += 1
         elif typ == "token_count":
-            current = _desktop_usage(payload.get("info"))
+            out["token_count_events"] += 1
+            info = payload.get("info")
+            if info is None:
+                out["null_usage_heartbeats"] += 1
+                continue
+            current = _desktop_usage(info)
             for key in TOKEN_KEYS:
                 if current[key] < latest.get(key, 0):
                     raise IngestError("desktop cumulative usage moved backwards")
@@ -218,7 +229,7 @@ def ingest(paths: Iterable[str | Path] | None, *, state_path: str | Path, metric
 
         def consume(items: list[dict[str, Any]]) -> None:
             nonlocal latest, open_ids, open_count, source_model
-            if fmt == ROLLOUT_FORMAT:
+            if fmt in ROLLOUT_FORMATS:
                 delta, latest, open_ids, source_model = _parse_rollout(
                     items, latest, open_ids, source_model,
                 )
@@ -257,11 +268,13 @@ def ingest(paths: Iterable[str | Path] | None, *, state_path: str | Path, metric
             continue
         if batch:
             consume(batch)
+        is_rollout = fmt in ROLLOUT_FORMATS
         state["sources"][source_id] = {
             "offset": consumed, "prefix_sha256": _prefix_sha(path, consumed),
-            "format": fmt, "desktop_total_usage": latest,
-            "open_turn_ids": sorted(open_ids) if fmt == ROLLOUT_FORMAT else None,
-            "open_turn_count": len(open_ids) if fmt == ROLLOUT_FORMAT else open_count,
+            "format": ROLLOUT_FORMAT if is_rollout else fmt,
+            "desktop_total_usage": latest,
+            "open_turn_ids": sorted(open_ids) if is_rollout else None,
+            "open_turn_count": len(open_ids) if is_rollout else open_count,
             "model": source_model,
         }
         processed += 1
@@ -269,4 +282,11 @@ def ingest(paths: Iterable[str | Path] | None, *, state_path: str | Path, metric
     _write_json(metrics_file, metrics)
     cutoff = (datetime.now(timezone.utc).date() - timedelta(days=6)).isoformat()
     recent = [v for v in metrics["days"].values() if v["date_utc"] >= cutoff]
-    return {"sources_updated": processed, "added": added, "last_7_days": recent, "state_version": STATE_VERSION}
+    return {
+        "sources_updated": processed,
+        "token_count_events": added["token_count_events"],
+        "null_usage_heartbeats": added["null_usage_heartbeats"],
+        "added": added,
+        "last_7_days": recent,
+        "state_version": STATE_VERSION,
+    }
