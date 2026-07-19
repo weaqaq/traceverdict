@@ -34,8 +34,11 @@ jobs:
       - name: Verify Markdown links
         run: python scripts/check_links.py
 
-      - name: Verify seven-command CLI
+      - name: Verify ten-command CLI
         run: python scripts/check_cli_contract.py
+
+      - name: Verify packaged Daily assets
+        run: python scripts/sync_daily_resources.py --check
 
       - name: Run public test suite
         run: pytest -q

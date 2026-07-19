@@ -1,0 +1,10 @@
+{
+  "image_ref": "traceverdict/self-base:py3.12-v1",
+  "base": "python@sha256:423ed6ab25b1921a477529254bfeeabf5855151dc2c3141699a1bfc852199fbf",
+  "built_for": "TraceVerdict self suite v0.1",
+  "direct_pins": [
+    "pytest==9.1.1",
+    "fastapi==0.139.0",
+    "httpx==0.28.1"
+  ]
+}

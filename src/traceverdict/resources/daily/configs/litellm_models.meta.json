@@ -1,0 +1,30 @@
+{
+  "verified_at": "2026-07-16",
+  "source": "https://api-docs.deepseek.com/quick_start/pricing",
+  "thinking_source": "https://api-docs.deepseek.com/guides/thinking_mode",
+  "models": {
+    "deepseek-v4-flash": {
+      "prices_usd_per_token": {
+        "cache_hit_input": 2.8e-9,
+        "cache_miss_input": 1.4e-7,
+        "output": 2.8e-7
+      }
+    },
+    "deepseek-v4-pro": {
+      "prices_usd_per_token": {
+        "cache_hit_input": 3.625e-9,
+        "cache_miss_input": 4.35e-7,
+        "output": 8.7e-7
+      },
+      "context_tokens": 1048576,
+      "max_output_tokens": 393216,
+      "thinking_identity": {
+        "thinking": {"type": "enabled"},
+        "reasoning_effort": "intentionally-omitted-to-mirror-flash",
+        "sampling_parameters": "omitted-not-supported-in-thinking-mode"
+      }
+    }
+  },
+  "registry_sha256": "88ee0851bc87a5a1a1f832131ef9854d0232349fc554bffe417f581a82f6c4d1",
+  "revalidate_before": "every M4-S paid probe"
+}

@@ -50,11 +50,22 @@ def findings(label: str, data: bytes) -> list[str]:
 
 
 def worktree_files() -> list[Path]:
-    return [
-        path
-        for path in ROOT.rglob("*")
-        if path.is_file() and ".git" not in path.parts and path.resolve() != SELF
-    ]
+    # Scan exactly the publication candidate: tracked files plus untracked
+    # files that are not excluded by .gitignore.  Test caches and local Daily
+    # state are intentionally outside the public artifact and must not make a
+    # scan non-deterministic merely because they exist on a developer machine.
+    raw = run(
+        "git", "ls-files", "-z", "--cached", "--others", "--exclude-standard",
+        cwd=ROOT,
+    )
+    files: list[Path] = []
+    for rel in raw.decode("utf-8", "surrogateescape").split("\0"):
+        if not rel:
+            continue
+        path = ROOT / rel
+        if path.is_file() and path.resolve() != SELF:
+            files.append(path)
+    return sorted(files)
 
 
 def scan_worktree() -> list[str]:
@@ -86,7 +97,7 @@ def scan_git_repository(repo: Path, label: str) -> list[str]:
 
 def scan_bundles() -> list[str]:
     errors: list[str] = []
-    for bundle in sorted(ROOT.rglob("*.bundle")):
+    for bundle in (path for path in worktree_files() if path.suffix == ".bundle"):
         with tempfile.TemporaryDirectory(prefix="traceverdict-bundle-") as tmp:
             repo = Path(tmp) / "repo"
             subprocess.check_call(
@@ -109,7 +120,8 @@ def main() -> int:
         print("PUBLIC SAFETY SCAN FAILED")
         print("\n".join(sorted(set(errors))))
         return 1
-    print(f"PUBLIC SAFETY SCAN PASSED: {len(worktree_files())} files, {len(list(ROOT.rglob('*.bundle')))} bundles")
+    files = worktree_files()
+    print(f"PUBLIC SAFETY SCAN PASSED: {len(files)} files, {sum(path.suffix == '.bundle' for path in files)} bundles")
     return 0
 
 

@@ -13,8 +13,10 @@ app = typer.Typer(
     help="TraceVerdict: stateful regression evaluation for coding agents.",
     no_args_is_help=True,
 )
+baseline_app = typer.Typer(help="Manage cached Daily Mode baselines.", no_args_is_help=True)
+app.add_typer(baseline_app, name="baseline")
 
-_UNIMPLEMENTED = "Not implemented in v0.1"
+_UNIMPLEMENTED = "Not implemented in v0.2"
 
 
 def _not_implemented() -> None:
@@ -157,6 +159,150 @@ def selftest(
     typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
     if not result.get("passed"):
         raise typer.Exit(code=1)
+
+
+def _daily_echo(result: dict, as_json: bool) -> None:
+    if as_json:
+        typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
+        return
+    from rich.console import Console
+    from rich.table import Table
+
+    table = Table(title=f"Daily Mode — {result.get('conclusion', 'BASELINE')}")
+    table.add_column("Metric")
+    table.add_column("Value")
+    for key in (
+        "candidate_config_id", "baseline_config_id", "scope", "delta_pass",
+        "delta_tokens_median", "token_ratio", "delta_wall_p95", "wall_ratio",
+        "actual_cost_usd", "reused_task_count", "new_task_count", "failed_tasks",
+    ):
+        if key in result:
+            table.add_row(key, json.dumps(result[key], ensure_ascii=False))
+    Console().print(table)
+
+
+def _ingest_echo(result: dict, as_json: bool) -> None:
+    if as_json:
+        typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
+        return
+    from rich.console import Console
+    from rich.table import Table
+
+    table = Table(title=f"Passive ingest — {result['sources_updated']} source(s) updated")
+    for name in ("UTC date", "model", "tokens in/cached/out/reasoning", "turns", "tools", "failures", "open"):
+        table.add_column(name)
+    for row in sorted(result["last_7_days"], key=lambda item: (item["date_utc"], item["model"])):
+        failures = sum(int(value) for value in row["failures"].values())
+        table.add_row(
+            row["date_utc"], row["model"],
+            f"{row['input_tokens']}/{row['cached_input_tokens']}/{row['output_tokens']}/{row['reasoning_output_tokens']}",
+            str(row["turns"]), str(row["tool_calls"]), str(failures), str(row["open_turns"]),
+        )
+    Console().print(table)
+
+
+@app.command()
+def quick(
+    set_values: list[str] = typer.Option([], "--set", help="model=<id> or model_params.x=<JSON scalar>"),
+    prompt_file: Optional[Path] = typer.Option(None, "--prompt-file"),
+    full: bool = typer.Option(False, "--full", help="Run frozen S1-S8 instead of S1/S4/S6"),
+    base_config: Path = typer.Option(Path("configs/dev.yaml"), "--base-config"),
+    name: str = typer.Option("default", "--name"),
+    json_output: bool = typer.Option(False, "--json"),
+    state_dir: Path = typer.Option(Path(".traceverdict/daily"), "--state-dir", hidden=True),
+) -> None:
+    """Derive an immutable config and compare the candidate with a cached baseline."""
+    from traceverdict.daily import DailyError, DailyFailure, DailyPaths, derive_config, run_quick
+    from traceverdict.resources import resolve_daily_assets
+
+    paths = DailyPaths.at(state_dir)
+    try:
+        assets = resolve_daily_assets()
+        if base_config == Path("configs/dev.yaml") and not base_config.is_file():
+            base_config = assets.configs / "dev.yaml"
+        config_path, _ = derive_config(
+            base_config, set_values=set_values, prompt_file=prompt_file,
+            output_dir=paths.configs, registries_dir=assets.configs,
+        )
+        result = run_quick(
+            config_path, full=full, name=name, paths=paths,
+            tasks_root=assets.tasks_self,
+        )
+    except DailyFailure as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    except DailyError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=2) from exc
+    _daily_echo(result, json_output)
+    if result["conclusion"] == "FAIL":
+        raise typer.Exit(code=1)
+
+
+@baseline_app.command("set")
+def baseline_set(
+    config: Path = typer.Option(..., "--config"),
+    full: bool = typer.Option(False, "--full"),
+    name: str = typer.Option("default", "--name"),
+    state_dir: Path = typer.Option(Path(".traceverdict/daily"), "--state-dir", hidden=True),
+) -> None:
+    """Run a missing baseline scope once and cache its immutable pointers."""
+    from traceverdict.daily import DailyError, DailyFailure, DailyPaths, set_baseline
+    from traceverdict.resources import resolve_daily_assets
+
+    try:
+        assets = resolve_daily_assets()
+        if config == Path("configs/dev.yaml") and not config.is_file():
+            config = assets.configs / "dev.yaml"
+        result = set_baseline(
+            config, full=full, name=name, paths=DailyPaths.at(state_dir),
+            tasks_root=assets.tasks_self,
+        )
+    except DailyFailure as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    except DailyError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=2) from exc
+    typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
+
+
+@baseline_app.command("update")
+def baseline_update(
+    candidate: str = typer.Option(..., "--candidate"),
+    full: bool = typer.Option(False, "--full"),
+    name: str = typer.Option("default", "--name"),
+    accept_regression: bool = typer.Option(False, "--accept-regression"),
+    state_dir: Path = typer.Option(Path(".traceverdict/daily"), "--state-dir", hidden=True),
+) -> None:
+    """Promote an existing complete candidate without starting any run."""
+    from traceverdict.daily import DailyError, DailyPaths, update_baseline
+
+    try:
+        result = update_baseline(candidate, full=full, name=name, accept_regression=accept_regression, paths=DailyPaths.at(state_dir))
+    except DailyError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=2) from exc
+    typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
+
+
+@app.command()
+def ingest(
+    paths: list[Path] = typer.Argument(None),
+    json_output: bool = typer.Option(False, "--json"),
+    state_dir: Path = typer.Option(Path(".traceverdict/daily"), "--state-dir", hidden=True),
+) -> None:
+    """Incrementally summarize Codex JSONL without storing session content."""
+    from traceverdict.daily import DailyPaths
+    from traceverdict.ingest import IngestError, ingest as ingest_logs
+
+    daily = DailyPaths.at(state_dir)
+    try:
+        result = ingest_logs(paths or None, state_path=daily.ingest_state, metrics_path=daily.ingest_metrics)
+    except IngestError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=2) from exc
+    _ingest_echo(result, json_output)
 
 
 if __name__ == "__main__":

@@ -35,7 +35,7 @@ python -m pip install "mini-swe-agent==2.4.5"
 traceverdict --help
 ```
 
-TraceVerdict exposes exactly seven commands:
+TraceVerdict v0.2 exposes exactly ten top-level commands through either `traceverdict` or the equivalent short entry point `tv`:
 
 ```text
 traceverdict run TASK --config CONFIG
@@ -45,9 +45,30 @@ traceverdict report COMPARISON_ID
 traceverdict inject I3Q --base configs/dev.yaml --output injected.yaml
 traceverdict replay
 traceverdict selftest --config configs/dev.yaml
+tv quick --set model=openai/deepseek-v4-flash
+tv baseline set --config configs/dev.yaml
+tv ingest
 ```
 
-`replay` is an intentionally visible v0.1 stub and exits with code 2. Paid/provider runs require credentials supplied only through the process environment; no credential file belongs in this repository.
+`replay` remains an intentionally visible zero-model CI boundary and currently exits with code 2. Paid/provider runs require credentials supplied only through the process environment; no credential file belongs in this repository.
+
+## Daily Mode
+
+Daily Mode keeps its local, ignored state under `.traceverdict/daily/`. First establish an explicit cached baseline (this is the only step that may execute its missing baseline tasks):
+
+```bash
+tv baseline set --config configs/dev.yaml
+tv quick --set model=openai/deepseek-v4-flash
+tv quick --set model=openai/deepseek-v4-flash --set model_params.thinking.type=enabled --full
+```
+
+The default smoke set is frozen to S1/S4/S6; `--full` is frozen to S1-S8 and reuses already completed smoke runs. SWE-bench is deliberately unavailable through `quick`: the 16-task public benchmark is for release evidence, not daily iteration. Derived configs are content-addressed, exact-price-registry checked, and immutable. `baseline update` promotes an already complete candidate without running a model, and refuses correctness or forbidden-path regressions unless `--accept-regression` is explicit.
+
+The one-screen result reports pass delta, token-median delta/ratio, wall-P95 delta/ratio, strict actual cost, cache reuse, and failed tasks. PASS/WARN exit 0, a behavioral FAIL exits 1, and a missing baseline or invalid identity exits 2. The five-minute/$0.005 and full-suite timing figures are experience estimates only; each invocation reports measured time and cost.
+
+`tv ingest [PATH ...]` is passive and starts no model, Docker container, or verifier. It incrementally summarizes stable `codex exec --json` logs and the explicitly versioned July 2026 desktop-rollout compatibility format. Only dates, model, token classes, turns, tool counts, and failure classes are persisted; prompts, answers, commands, output, paths, and credentials are not. Desktop transcript format is not a stable public interface, so required-field drift fails closed instead of being guessed.
+
+This package is published by the project owner. Trusted Publishing through GitHub Actions OIDC is planned as a v0.3 supply-chain improvement.
 
 ## Reproduce the frozen report
 

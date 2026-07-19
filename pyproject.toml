@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "traceverdict"
-version = "0.1.0"
-description = "Auditable state-regression evaluation for coding agents"
+version = "0.2.0"
+description = "Auditable state-regression evaluation for coding agents; published by the project owner"
 readme = "README.md"
 requires-python = ">=3.12"
-license = {text = "MIT"}
+license = "MIT"
 dependencies = [
     "typer",
     "pydantic",
@@ -21,6 +21,7 @@ dependencies = [
 
 [project.scripts]
 traceverdict = "traceverdict.cli:app"
+tv = "traceverdict.cli:app"
 
 [project.urls]
 Homepage = "https://github.com/weaqaq/traceverdict"
@@ -31,7 +32,14 @@ Issues = "https://github.com/weaqaq/traceverdict/issues"
 where = ["src"]
 
 [tool.setuptools.package-data]
-traceverdict = ["tracer/schema.sql"]
+traceverdict = [
+    "tracer/schema.sql",
+    "resources/daily/configs/*",
+    "resources/daily/tasks/self/*",
+    "resources/daily/tasks/self/_image/*",
+    "resources/daily/tasks/self/S*/*",
+    "resources/daily/tasks/self/S*/verify/*",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

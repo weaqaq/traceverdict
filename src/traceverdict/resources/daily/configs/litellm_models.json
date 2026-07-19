@@ -1,0 +1,18 @@
+{
+  "openai/deepseek-v4-flash": {
+    "max_tokens": 1048576,
+    "input_cost_per_token": 1.4e-7,
+    "cache_read_input_token_cost": 2.8e-9,
+    "output_cost_per_token": 2.8e-7,
+    "litellm_provider": "openai",
+    "mode": "chat"
+  },
+  "openai/deepseek-v4-pro": {
+    "max_tokens": 1048576,
+    "input_cost_per_token": 4.35e-7,
+    "cache_read_input_token_cost": 3.625e-9,
+    "output_cost_per_token": 8.7e-7,
+    "litellm_provider": "openai",
+    "mode": "chat"
+  }
+}

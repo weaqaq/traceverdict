@@ -1,0 +1,24 @@
+id: S4
+suite: self
+source: self
+repo_ref: repo.bundle
+base_commit: 86405c4e98ae64da8abc0ecaba460fcb785804db
+image_ref: "traceverdict/self-base:py3.12-v1"
+instruction: Refactor the duplicated whitespace/case normalization into one private helper without changing public behavior. Do not modify tests.
+budget:
+  max_steps: 30
+  max_tokens: 100000
+  max_wall_s: 600
+  max_cost_usd: 1.0
+forbidden_paths: []
+gt:
+  type: pytest
+  spec:
+    pass_to_pass:
+      - "tests/test_normalize.py::test_name_behavior"
+      - "tests/test_normalize.py::test_tag_behavior"
+    patch_must_be_nonempty: true
+tags:
+  - refactor
+  - pass_to_pass
+  - nonempty_patch

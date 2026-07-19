@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import shutil
@@ -123,6 +124,7 @@ def _build_mini_config(
     ]
     raw_model_params = dict(model_params or {})
     injection = dict(raw_model_params.pop("_traceverdict_injection", {}) or {})
+    prompt_override = raw_model_params.pop("_traceverdict_system_prompt", None)
     injection_id = str(injection.get("id", "")).upper()
     if injection_id == "I3Q":
         run_args[-1] = f"{host}:{container_cwd}:ro"
@@ -130,6 +132,17 @@ def _build_mini_config(
         "You are a helpful assistant that can interact with a computer shell "
         "to solve programming tasks."
     )
+    if prompt_override is not None:
+        if not isinstance(prompt_override, dict):
+            raise AdapterHarnessError("daily system prompt identity must be a mapping")
+        content = prompt_override.get("content")
+        expected_sha = prompt_override.get("sha256")
+        if not isinstance(content, str) or not content.strip():
+            raise AdapterHarnessError("daily system prompt content is empty")
+        actual_sha = hashlib.sha256(content.encode("utf-8")).hexdigest()
+        if expected_sha != actual_sha:
+            raise AdapterHarnessError("daily system prompt SHA256 mismatch")
+        system_template = content
     tool_instruction = "You can execute bash commands and edit files.\n"
     instance_template = (
         "Please solve this issue in {{cwd}}:\n{{task}}\n\n"

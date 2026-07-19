@@ -1,4 +1,4 @@
-"""Smoke tests: CLI --help lists all seven subcommands."""
+"""Smoke tests: CLI --help lists all ten v0.2 subcommands."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ from click import unstyle
 from typer.testing import CliRunner
 
 from traceverdict.cli import app
+from traceverdict import __version__
 
 runner = CliRunner()
 
@@ -20,23 +21,58 @@ EXPECTED_COMMANDS = (
     "inject",
     "replay",
     "selftest",
+    "quick",
+    "baseline",
+    "ingest",
 )
 
 
-def test_help_lists_seven_subcommands() -> None:
+def test_help_lists_ten_subcommands() -> None:
+    from typer.main import get_command
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     for name in EXPECTED_COMMANDS:
         assert name in result.stdout
+    assert len(EXPECTED_COMMANDS) == 10
+    assert set(get_command(app).commands) == set(EXPECTED_COMMANDS)
+
+
+def test_v02_version_and_tv_alias() -> None:
+    from pathlib import Path
+    text = Path("pyproject.toml").read_text(encoding="utf-8")
+    assert __version__ == "0.2.0"
+    assert 'version = "0.2.0"' in text
+    assert 'tv = "traceverdict.cli:app"' in text
 
 
 def test_stub_commands_exit_2() -> None:
     # T4 implements inject/selftest; replay remains the only gated stub.
-    stubs = [c for c in EXPECTED_COMMANDS if c not in {"run", "suite", "compare", "report", "inject", "selftest"}]
+    stubs = ["replay"]
     for name in stubs:
         result = runner.invoke(app, [name])
         assert result.exit_code == 2, f"{name} should exit 2"
-        assert "Not implemented in v0.1" in result.stdout
+        assert "Not implemented in v0.2" in result.stdout
+
+
+def test_daily_help_contract() -> None:
+    for command in ("quick", "baseline", "ingest"):
+        result = runner.invoke(app, [command, "--help"])
+        assert result.exit_code == 0
+    result = runner.invoke(app, ["baseline", "--help"])
+    assert "set" in result.stdout and "update" in result.stdout
+
+
+def test_baseline_set_uses_packaged_default_when_checkout_path_is_absent() -> None:
+    from traceverdict.resources import resolve_daily_assets
+
+    with runner.isolated_filesystem(), patch(
+        "traceverdict.daily.set_baseline", return_value={"ok": True}
+    ) as mocked:
+        result = runner.invoke(
+            app, ["baseline", "set", "--config", "configs/dev.yaml"]
+        )
+    assert result.exit_code == 0
+    assert mocked.call_args.args[0] == resolve_daily_assets().configs / "dev.yaml"
 
 
 def test_run_help_lists_config_option() -> None:
