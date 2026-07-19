@@ -40,8 +40,9 @@ def test_help_lists_ten_subcommands() -> None:
 def test_v02_version_and_tv_alias() -> None:
     from pathlib import Path
     text = Path("pyproject.toml").read_text(encoding="utf-8")
-    assert __version__ == "0.2.0"
-    assert 'version = "0.2.0"' in text
+    assert __version__ == "0.2.1"
+    assert 'version = "0.2.1"' in text
+    assert '"litellm==1.91.1"' in text
     assert 'tv = "traceverdict.cli:app"' in text
 
 

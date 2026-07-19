@@ -64,7 +64,7 @@ def test_registry_must_be_unique_and_overrides_are_restricted(tmp_path: Path) ->
 
 
 def _insert_config(conn, cid: str) -> None:
-    conn.execute("INSERT INTO config VALUES (?,?,?,?,?,?,?,?)", (cid, "mini-swe-agent", "2.4.5", "m", "{}", "p", "0.2.0", None))
+    conn.execute("INSERT INTO config VALUES (?,?,?,?,?,?,?,?)", (cid, "mini-swe-agent", "2.4.5", "m", "{}", "p", "0.2.1", None))
 
 
 def _insert_task(conn, task: str) -> None:
