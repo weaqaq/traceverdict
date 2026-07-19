@@ -18,7 +18,7 @@ from traceverdict.tracer import db as dbmod
 from traceverdict.verifier import rule_run_passed, verify_run
 
 QUICK_TASKS = ("S1", "S4", "S6")
-FULL_TASKS = tuple(f"S{i}" for i in range(1, 9))
+FULL_TASKS = tuple(f"S{i}" for i in range(1, 12))
 STATE_RELATIVE = Path(".traceverdict/daily")
 
 
@@ -117,7 +117,7 @@ def derive_config(
     base_path = Path(base_config).resolve()
     raw = load_path(base_path)
     if not isinstance(raw, dict) or raw.get("agent_name") != "mini-swe-agent":
-        raise DailyError("Daily Mode v0.2 supports mini-swe-agent configs only")
+        raise DailyError("Daily Mode v0.3 supports mini-swe-agent configs only")
     overrides = parse_overrides(set_values)
     model = str(overrides.pop("model", raw.get("model_name", "")))
     registry, registry_sha = find_registry(model, registries_dir)
@@ -157,7 +157,7 @@ def derive_config(
         model_name=model,
         model_params=model_params,
         litellm_model_registry=str(registry),
-        harness_version="0.2.2",
+        harness_version="0.3.0",
         notes=f"daily parent={raw.get('config_id')} identity_sha256={digest}",
     )
     output = Path(output_dir) / f"{derived['config_id']}.yaml"
@@ -196,14 +196,20 @@ def _save_baselines(path: Path, data: dict[str, Any]) -> None:
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
-def _runs_for(conn: sqlite3.Connection, config_id: str, task_ids: Iterable[str]) -> dict[str, sqlite3.Row]:
+def _runs_for(
+    conn: sqlite3.Connection,
+    config_id: str,
+    task_ids: Iterable[str],
+    *,
+    repetition_idx: int = 0,
+) -> dict[str, sqlite3.Row]:
     wanted = tuple(task_ids)
     if not wanted:
         return {}
     qs = ",".join("?" for _ in wanted)
     rows = conn.execute(
-        f"SELECT * FROM run WHERE config_id=? AND repetition_idx=0 AND task_id IN ({qs}) ORDER BY finished_at DESC",
-        (config_id, *wanted),
+        f"SELECT * FROM run WHERE config_id=? AND repetition_idx=? AND task_id IN ({qs}) ORDER BY finished_at DESC",
+        (config_id, repetition_idx, *wanted),
     ).fetchall()
     result: dict[str, sqlite3.Row] = {}
     for row in rows:
@@ -257,6 +263,8 @@ def execute_scope(
     runner: Callable[..., dict[str, Any]] | None = None,
     verifier: Callable[..., Any] | None = None,
     tasks_root: str | Path = "tasks/self",
+    task_ids: Iterable[str] | None = None,
+    repetition_idx: int = 0,
 ) -> dict[str, Any]:
     from traceverdict.core.runner import run_task
 
@@ -266,12 +274,12 @@ def execute_scope(
     paths.ensure()
     cfg = load_config(config_path)
     docker_executable = str(cfg.get("docker_executable", "docker"))
-    task_ids = _task_ids(full)
+    task_ids = tuple(task_ids) if task_ids is not None else _task_ids(full)
     conn = _connect(paths.db)
     reused: list[str] = []
     created: list[str] = []
     try:
-        existing = _runs_for(conn, cfg["config_id"], task_ids)
+        existing = _runs_for(conn, cfg["config_id"], task_ids, repetition_idx=repetition_idx)
         for task_id in task_ids:
             row = existing.get(task_id)
             if row is not None:
@@ -294,7 +302,7 @@ def execute_scope(
                     config_path,
                     db_path=paths.db,
                     artifacts_dir=paths.artifacts,
-                    repetition_idx=0,
+                    repetition_idx=repetition_idx,
                 )
             finally:
                 if uses_default_runner:
@@ -305,7 +313,7 @@ def execute_scope(
             conn = _connect(paths.db)
             verifier(conn, result["run_id"], Path(tasks_root) / task_id)
             created.append(task_id)
-        rows = _runs_for(conn, cfg["config_id"], task_ids)
+        rows = _runs_for(conn, cfg["config_id"], task_ids, repetition_idx=repetition_idx)
         if set(rows) != set(task_ids) or not all(_valid_completion(r) for r in rows.values()):
             raise DailyFailure("scope did not produce complete auditable runs")
         missing_verdicts = [
@@ -360,7 +368,22 @@ def compare_daily(conn: sqlite3.Connection, baseline_id: str, candidate_id: str,
     bp, cp = _percentile95(b_wall), _percentile95(c_wall)
     token_ratio = cm / bm if bm else None
     wall_ratio = cp / bp if bp else None
-    conclusion = "FAIL" if regressions or forbidden else "WARN" if (token_ratio is not None and token_ratio > 1.30) or (wall_ratio is not None and wall_ratio > 1.50) else "PASS"
+    token_alarm = token_ratio is not None and token_ratio > 1.30
+    wall_alarm = wall_ratio is not None and wall_ratio > 1.50
+    signal_reasons: dict[str, list[str]] = {}
+    for task in tasks:
+        reasons: list[str] = []
+        if task in regressions:
+            reasons.append("correctness")
+        if task in forbidden:
+            reasons.append("forbidden")
+        if token_alarm and b[task]["tokens"] and c[task]["tokens"] / b[task]["tokens"] > 1.30:
+            reasons.append("tokens")
+        if wall_alarm and b[task]["wall"] and c[task]["wall"] / b[task]["wall"] > 1.50:
+            reasons.append("wall")
+        if reasons:
+            signal_reasons[task] = reasons
+    conclusion = "FAIL" if regressions or forbidden else "WARN" if token_alarm or wall_alarm else "PASS"
     return {
         "conclusion": conclusion,
         "baseline_config_id": baseline_id,
@@ -377,7 +400,76 @@ def compare_daily(conn: sqlite3.Connection, baseline_id: str, candidate_id: str,
         "new_forbidden": forbidden,
         "failed_tasks": [t for t in tasks if not c[t]["passed"]],
         "candidate_run_ids": {t: c[t]["run_id"] for t in tasks},
+        "signal_tasks": signal_reasons,
     }
+
+
+def confirm_daily(
+    config_path: str | Path,
+    *,
+    baseline_id: str,
+    candidate_id: str,
+    signal_tasks: dict[str, list[str]],
+    paths: DailyPaths,
+    runner=None,
+    verifier=None,
+    tasks_root: str | Path = "tasks/self",
+) -> dict[str, Any]:
+    """Re-run only signalled tasks twice and decide by three-run evidence."""
+    tasks = tuple(sorted(signal_tasks))
+    if not tasks:
+        return {"level": "cleared", "confirmed": False, "tasks": {}, "new_runs": 0}
+    for repetition in (1, 2):
+        execute_scope(
+            config_path,
+            full=False,
+            paths=paths,
+            runner=runner,
+            verifier=verifier,
+            tasks_root=tasks_root,
+            task_ids=tasks,
+            repetition_idx=repetition,
+        )
+    conn = _connect(paths.db)
+    try:
+        baselines = _rule_snapshot(conn, _runs_for(conn, baseline_id, tasks))
+        evidence: dict[str, Any] = {}
+        any_confirmed = False
+        for task in tasks:
+            reps = [
+                _rule_snapshot(
+                    conn,
+                    _runs_for(conn, candidate_id, (task,), repetition_idx=rep),
+                )[task]
+                for rep in (0, 1, 2)
+            ]
+            reasons = signal_tasks[task]
+            confirmed_reasons: list[str] = []
+            if "correctness" in reasons and baselines[task]["passed"] and sum(not r["passed"] for r in reps) >= 2:
+                confirmed_reasons.append("correctness")
+            if "forbidden" in reasons and sum(bool(r["forbidden"]) for r in reps) >= 2:
+                confirmed_reasons.append("forbidden")
+            if "tokens" in reasons and baselines[task]["tokens"] and median(r["tokens"] for r in reps) / baselines[task]["tokens"] > 1.30:
+                confirmed_reasons.append("tokens")
+            if "wall" in reasons and baselines[task]["wall"] and median(r["wall"] for r in reps) / baselines[task]["wall"] > 1.50:
+                confirmed_reasons.append("wall")
+            any_confirmed = any_confirmed or bool(confirmed_reasons)
+            evidence[task] = {
+                "initial_reasons": reasons,
+                "confirmed_reasons": confirmed_reasons,
+                "run_ids": [r["run_id"] for r in reps],
+                "tokens": [r["tokens"] for r in reps],
+                "wall": [r["wall"] for r in reps],
+                "passed": [r["passed"] for r in reps],
+            }
+        return {
+            "level": "confirmed" if any_confirmed else "cleared",
+            "confirmed": any_confirmed,
+            "tasks": evidence,
+            "new_runs": 2 * len(tasks),
+        }
+    finally:
+        conn.close()
 
 
 def set_baseline(config_path: str | Path, *, full: bool, name: str, paths: DailyPaths, runner=None, verifier=None, tasks_root="tasks/self") -> dict[str, Any]:

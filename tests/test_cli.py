@@ -1,4 +1,4 @@
-"""Smoke tests: CLI --help lists all ten v0.2 subcommands."""
+"""Smoke tests: CLI --help lists all eleven v0.3 subcommands."""
 
 from __future__ import annotations
 
@@ -25,23 +25,24 @@ EXPECTED_COMMANDS = (
     "quick",
     "baseline",
     "ingest",
+    "radar",
 )
 
 
-def test_help_lists_ten_subcommands() -> None:
+def test_help_lists_eleven_subcommands() -> None:
     from typer.main import get_command
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     for name in EXPECTED_COMMANDS:
         assert name in result.stdout
-    assert len(EXPECTED_COMMANDS) == 10
+    assert len(EXPECTED_COMMANDS) == 11
     assert set(get_command(app).commands) == set(EXPECTED_COMMANDS)
 
 
-def test_v02_version_and_tv_alias() -> None:
+def test_v03_version_and_tv_alias() -> None:
     text = Path("pyproject.toml").read_text(encoding="utf-8")
-    assert __version__ == "0.2.2"
-    assert 'version = "0.2.2"' in text
+    assert __version__ == "0.3.0"
+    assert 'version = "0.3.0"' in text
     assert '"litellm==1.91.1"' in text
     assert 'tv = "traceverdict.cli:app"' in text
 
@@ -52,7 +53,7 @@ def test_stub_commands_exit_2() -> None:
     for name in stubs:
         result = runner.invoke(app, [name])
         assert result.exit_code == 2, f"{name} should exit 2"
-        assert "Not implemented in v0.2" in result.stdout
+        assert "Not implemented in v0.3" in result.stdout
 
 
 def test_daily_help_contract() -> None:
@@ -61,6 +62,13 @@ def test_daily_help_contract() -> None:
         assert result.exit_code == 0
     result = runner.invoke(app, ["baseline", "--help"])
     assert "set" in result.stdout and "update" in result.stdout
+
+
+def test_radar_help_and_exit_contract() -> None:
+    result = runner.invoke(app, ["radar", "--help"])
+    assert result.exit_code == 0
+    for name in ("add", "tick", "report", "confirm", "baseline", "budget"):
+        assert name in result.stdout
 
 
 def test_ingest_json_and_rich_disclose_heartbeat_counts(tmp_path: Path) -> None:
@@ -118,7 +126,7 @@ def test_suite_dry_run_prints_json() -> None:
         "suite": "self",
         "config_id": "dev-deepseek-v4-flash-v2",
         "dry_run": True,
-        "count": 8,
+        "count": 11,
         "tasks": [],
     }
     with patch("traceverdict.core.suite.validate_suite", return_value=payload):
@@ -127,4 +135,4 @@ def test_suite_dry_run_prints_json() -> None:
             ["suite", "tasks/self", "--config", "configs/dev.yaml", "--dry-run"],
         )
     assert result.exit_code == 0
-    assert json.loads(result.stdout)["count"] == 8
+    assert json.loads(result.stdout)["count"] == 11

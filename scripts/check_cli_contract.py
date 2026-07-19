@@ -1,4 +1,4 @@
-"""Verify the frozen v0.2 ten-command public CLI contract."""
+"""Verify the frozen v0.3 eleven-command public CLI contract."""
 
 import sys
 from pathlib import Path
@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from traceverdict.cli import app
 
-EXPECTED = {"run", "suite", "compare", "report", "inject", "replay", "selftest", "quick", "baseline", "ingest"}
+EXPECTED = {"run", "suite", "compare", "report", "inject", "replay", "selftest", "quick", "baseline", "ingest", "radar"}
 
 
 def main() -> int:
@@ -22,7 +22,7 @@ def main() -> int:
         print(f"missing commands: {missing}")
         return 1
     print(result.output)
-    print("CLI CONTRACT PASSED: ten commands")
+    print("CLI CONTRACT PASSED: eleven commands")
     return 0
 
 

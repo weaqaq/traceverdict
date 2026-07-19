@@ -1,4 +1,4 @@
-# TraceVerdict
+# TraceVerdict 0.3 — Radar
 
 TraceVerdict is an auditable regression-evaluation harness for coding agents. It freezes repository and container state, captures native agent trajectories, and compares the resulting file changes and official test verdicts with paired statistics.
 
@@ -35,7 +35,7 @@ python -m pip install "mini-swe-agent==2.4.5"
 traceverdict --help
 ```
 
-TraceVerdict v0.2 exposes exactly ten top-level commands through either `traceverdict` or the equivalent short entry point `tv`:
+TraceVerdict v0.3 exposes exactly eleven top-level commands through either `traceverdict` or the equivalent short entry point `tv`:
 
 ```text
 traceverdict run TASK --config CONFIG
@@ -48,6 +48,7 @@ traceverdict selftest --config configs/dev.yaml
 tv quick --set model=openai/deepseek-v4-flash
 tv baseline set --config configs/dev.yaml
 tv ingest
+tv radar --help
 ```
 
 `replay` remains an intentionally visible zero-model CI boundary and currently exits with code 2. Paid/provider runs require credentials supplied only through the process environment; no credential file belongs in this repository.
@@ -62,13 +63,13 @@ tv quick --set model=openai/deepseek-v4-flash
 tv quick --set model=openai/deepseek-v4-flash --set model_params.thinking.type=enabled --full
 ```
 
-The default smoke set is frozen to S1/S4/S6; `--full` is frozen to S1-S8 and reuses already completed smoke runs. SWE-bench is deliberately unavailable through `quick`: the 16-task public benchmark is for release evidence, not daily iteration. Derived configs are content-addressed, exact-price-registry checked, and immutable. `baseline update` promotes an already complete candidate without running a model, and refuses correctness or forbidden-path regressions unless `--accept-regression` is explicit.
+The default smoke set is frozen to S1/S4/S6; `--full` is frozen to S1-S11 and reuses already completed smoke runs. SWE-bench is deliberately unavailable through `quick`: the 16-task public benchmark is for release evidence, not daily iteration. Derived configs are content-addressed, exact-price-registry checked, and immutable. `baseline update` promotes an already complete candidate without running a model, and refuses correctness or forbidden-path regressions unless `--accept-regression` is explicit.
 
 The one-screen result reports pass delta, token-median delta/ratio, wall-P95 delta/ratio, strict actual cost, cache reuse, and failed tasks. PASS/WARN exit 0, a behavioral FAIL exits 1, and a missing baseline or invalid identity exits 2. The five-minute/$0.005 and full-suite timing figures are experience estimates only; each invocation reports measured time and cost.
 
 `tv ingest [PATH ...]` is passive and starts no model, Docker container, or verifier. It incrementally summarizes stable `codex exec --json` logs and the explicitly versioned July 2026 desktop-rollout compatibility format. Only dates, model, token classes, turns, tool counts, failure classes, and aggregate event counters are persisted; prompts, answers, commands, output, paths, and credentials are not. Desktop transcript format is not a stable public interface, so required-field drift fails closed instead of being guessed. Format `codex-rollout-jsonl-observed-2026-07-v2` differs from v1 only by recognizing `token_count` records whose entire `info` value is null as zero-token initialization heartbeats; a non-null `info` without required usage remains an error.
 
-This package is published by the project owner. Trusted Publishing through GitHub Actions OIDC is planned as a v0.3 supply-chain improvement.
+This package is published by the project owner. Trusted Publishing through GitHub Actions OIDC remains a future supply-chain improvement; v0.3 uses a project-scoped token.
 
 ## Reproduce the frozen report
 
@@ -101,3 +102,32 @@ CI runs a fail-closed public-safety scan over text, binary bundles, nested Git a
 ## License
 
 [MIT](LICENSE)
+## Radar
+
+TraceVerdict remains a CLI: schedule `tv radar tick` with Windows Task Scheduler or cron. Register a derived immutable config, seed the real-spend ledger, then tick and report:
+
+```console
+tv radar add --config .traceverdict/daily/configs/daily-....yaml --set-name quick
+tv radar budget set --project-actual-usd 1.25 --monthly-limit-usd 3
+tv radar tick
+tv radar report --days 7
+tv radar confirm signal-...
+```
+
+The first tick becomes the default reference window; `tv radar baseline set --name CONFIG_ID --tick-id TICK_ID` changes it explicitly. Radar state is ignored under `.traceverdict/radar/`. Scheduling recipes:
+
+- Windows Task Scheduler: run `tv radar tick` at the desired interval with the project directory as “Start in”.
+- cron: `0 9 * * * cd /path/to/project && tv radar tick`.
+
+Exit codes are contractual:
+
+| Result | Severity | Exit |
+|---|---:|---:|
+| clean or withdrawn after confirmation | none | 0 |
+| confirmed WARN or confirmed FAIL | confirmed | 1 |
+| configuration, integrity, or budget pause | error | 2 |
+| one-tick WARN or FAIL awaiting confirmation | signal | 3 |
+
+`tv quick --confirm` uses the same targeted confirmation engine: only signalled tasks receive two additional runs; the original plus those runs form the three-run decision. A confirmed efficiency WARN exits 1 just like a confirmed correctness FAIL.
+
+S9-S11 extend the full self suite with public-HEAD rollback-constructed case histories for UF-1, UF-2, and F-5. They are explicitly synthetic rollbacks of accepted fixes, not claims about original historical commits. S11 permits the price registry to change—the legitimate repair surface—while freezing its dual-dataset test and usage fixture as forbidden evidence.

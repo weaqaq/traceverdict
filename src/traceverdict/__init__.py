@@ -1,3 +1,3 @@
 """TraceVerdict: stateful regression evaluation system for coding agents."""
 
-__version__ = "0.2.2"
+__version__ = "0.3.0"

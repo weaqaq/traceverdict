@@ -13,6 +13,7 @@ from traceverdict.daily import (
     FULL_TASKS,
     QUICK_TASKS,
     compare_daily,
+    confirm_daily,
     derive_config,
     execute_scope,
     parse_overrides,
@@ -74,9 +75,9 @@ def _insert_task(conn, task: str) -> None:
     ))
 
 
-def _insert_run(conn, cid: str, task: str, passed: bool, forbidden: bool, tokens: int, wall: float) -> None:
-    rid = f"{cid}-{task}"
-    conn.execute("INSERT INTO run VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (rid, task, cid, 0, "scenario", "ok", "Submitted", None, None, wall, tokens - 1, 1, 0.01, None, "fp"))
+def _insert_run(conn, cid: str, task: str, passed: bool, forbidden: bool, tokens: int, wall: float, repetition_idx: int = 0) -> None:
+    rid = f"{cid}-{task}-{repetition_idx}"
+    conn.execute("INSERT INTO run VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (rid, task, cid, repetition_idx, "scenario", "ok", "Submitted", None, None, wall, tokens - 1, 1, 0.01, None, "fp"))
     for name, value in (("patch_valid", passed), ("forbidden", not forbidden)):
         conn.execute("INSERT INTO verdict VALUES (?,?,?,?,?,?,?,?,?)", (f"{rid}-{name}", rid, "rule", name, int(value), None, "{}", None, "r"))
 
@@ -120,7 +121,7 @@ def test_baseline_update_never_runs_and_protects_regression(tmp_path: Path) -> N
 
 def test_daily_task_scopes_are_frozen() -> None:
     assert QUICK_TASKS == ("S1", "S4", "S6")
-    assert FULL_TASKS == tuple(f"S{i}" for i in range(1, 9))
+    assert FULL_TASKS == tuple(f"S{i}" for i in range(1, 12))
 
 
 def test_prompt_reserved_identity_is_stripped_before_provider(tmp_path: Path) -> None:
@@ -156,7 +157,7 @@ def test_quick_to_full_reuses_three_completions_and_runs_only_five(tmp_path: Pat
         _insert_run(conn, cfg["config_id"], task_id, True, False, 100, 10)
         conn.commit()
         conn.close()
-        return {"run_id": f"{cfg['config_id']}-{task_id}", "status": "ok"}
+        return {"run_id": f"{cfg['config_id']}-{task_id}-0", "status": "ok"}
 
     def verifier(conn, run_id, task_path):
         # The mocked runner already persisted deterministic rule verdicts.
@@ -166,8 +167,8 @@ def test_quick_to_full_reuses_three_completions_and_runs_only_five(tmp_path: Pat
     second = execute_scope(base, full=True, paths=paths, runner=runner, verifier=verifier, tasks_root=tmp_path / "tasks")
     assert first["new"] == list(QUICK_TASKS)
     assert second["reused"] == list(QUICK_TASKS)
-    assert second["new"] == ["S2", "S3", "S5", "S7", "S8"]
-    assert len(calls) == 8
+    assert second["new"] == ["S2", "S3", "S5", "S7", "S8", "S9", "S10", "S11"]
+    assert len(calls) == 11
 
 
 def test_default_daily_runner_cleans_only_its_new_mini_containers(
@@ -188,7 +189,7 @@ def test_default_daily_runner_cleans_only_its_new_mini_containers(
         _insert_run(conn, cfg["config_id"], task_id, True, False, 100, 10)
         conn.commit()
         conn.close()
-        return {"run_id": f"{cfg['config_id']}-{task_id}", "status": "ok"}
+        return {"run_id": f"{cfg['config_id']}-{task_id}-0", "status": "ok"}
 
     monkeypatch.setattr("traceverdict.core.runner.run_task", runner)
     monkeypatch.setattr("traceverdict.daily._mini_container_ids", lambda docker: {"older"})
@@ -206,3 +207,42 @@ def test_default_daily_runner_cleans_only_its_new_mini_containers(
     )
 
     assert removed == [("docker", {"older"})] * len(QUICK_TASKS)
+
+
+def test_quick_confirmation_repeats_only_signalled_task_twice(tmp_path: Path) -> None:
+    config, _ = _base(tmp_path)
+    paths = DailyPaths.at(tmp_path / "state")
+    paths.ensure()
+    conn = dbmod.init_db(paths.db)
+    _insert_config(conn, "base")
+    _insert_config(conn, "parent")
+    for task in QUICK_TASKS:
+        _insert_task(conn, task)
+        _insert_run(conn, "base", task, True, False, 100, 10)
+        _insert_run(conn, "parent", task, True, False, 140 if task == "S4" else 100, 10)
+    conn.commit()
+    conn.close()
+    calls: list[tuple[str, int]] = []
+
+    def runner(task_path, config_path, *, db_path, artifacts_dir, repetition_idx):
+        task = Path(task_path).name
+        calls.append((task, repetition_idx))
+        db = dbmod._connect(db_path)
+        _insert_run(db, "parent", task, True, False, 140, 10, repetition_idx)
+        db.commit()
+        db.close()
+        return {"run_id": f"parent-{task}-{repetition_idx}", "status": "ok"}
+
+    result = confirm_daily(
+        config,
+        baseline_id="base",
+        candidate_id="parent",
+        signal_tasks={"S4": ["tokens"]},
+        paths=paths,
+        runner=runner,
+        verifier=lambda *args: [],
+        tasks_root=tmp_path / "tasks",
+    )
+    assert calls == [("S4", 1), ("S4", 2)]
+    assert result["level"] == "confirmed"
+    assert result["new_runs"] == 2

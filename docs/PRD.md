@@ -1,4 +1,4 @@
-# TraceVerdict v0.2 — Public Frozen Requirements
+# TraceVerdict v0.3 — Public Frozen Requirements
 
 This is the sanitized public form of the frozen product requirements. The complete original task cards, raw run data, and per-commit audit history remain in the private audit repository. The SQLite schema in `src/traceverdict/tracer/schema.sql` is the authoritative v0.1 schema and is byte-identical to the accepted private snapshot.
 
@@ -8,7 +8,7 @@ TraceVerdict makes coding-agent regressions auditable. A run binds an immutable 
 
 ## 2. Scope and dependencies
 
-The v0.2 harness supports mini-swe-agent 2.4.5 and SWE-agent 1.1.0. GitPython is the frozen Git library. Docker provides disposable workspaces. SWE-bench 4.1.0 supplies official benchmark tests and ground-truth verdicts. LiteLLM is used for provider adaptation and cost reconciliation.
+The v0.3 harness supports mini-swe-agent 2.4.5 and SWE-agent 1.1.0. GitPython is the frozen Git library. Docker provides disposable workspaces. SWE-bench 4.1.0 supplies official benchmark tests and ground-truth verdicts. LiteLLM is used for provider adaptation and cost reconciliation.
 
 The harness owns trace capture, state snapshots, rule verification, paired statistics, reports, and injection isolation. It does not own provider models, agent algorithms, Docker, or the official SWE-bench judge.
 
@@ -18,9 +18,10 @@ The schema contains immutable configuration identity, task identity, run lifecyc
 
 ## 4. CLI contract
 
-The public v0.2 CLI has ten top-level commands: `run`, `suite`, `compare`, `report`, `inject`, `replay`, `selftest`, `quick`, `baseline`, and `ingest`; `tv` and `traceverdict` are equivalent entry points. Unsupported or gated behavior exits with code 2. `compare` requires an explicit task-set file; deriving a convenient database intersection is forbidden. The v0.1 SQLite core schema remains frozen.
+The public v0.3 CLI has eleven top-level commands: `run`, `suite`, `compare`, `report`, `inject`, `replay`, `selftest`, `quick`, `baseline`, `ingest`, and `radar`; `tv` and `traceverdict` are equivalent entry points. Unsupported or gated behavior exits with code 2. `compare` requires an explicit task-set file; deriving a convenient database intersection is forbidden. The v0.1 SQLite core schema remains frozen.
 
-Daily Mode is self-suite-only. `quick` runs S1/S4/S6, `quick --full` runs S1-S8 while reusing completed smoke tasks, and the 16-task SWE-bench set is prohibited. Configs are content-addressed immutable derivatives of a canonical parent, sorted overrides, prompt identity, and strict price-registry identity. Cached baselines live only in ignored local state; promotion never starts a model and requires explicit acceptance of a correctness/forbidden regression.
+Daily Mode is self-suite-only. `quick` runs S1/S4/S6, `quick --full` runs S1-S11 while reusing completed smoke tasks, and the 16-task SWE-bench set is prohibited. Configs are content-addressed immutable derivatives of a canonical parent, sorted overrides, prompt identity, and strict price-registry identity. Cached baselines live only in ignored local state; promotion never starts a model and requires explicit acceptance of a correctness/forbidden regression.
+Daily full scope is S1-S11 in v0.3; S9-S11 are deterministic rollback-constructed case histories. Radar is a one-shot CLI controlled by cron or Windows Task Scheduler. It stores sidecar state under `.traceverdict/radar`, never changes the core schema, and distinguishes an unconfirmed one-run signal from a targeted three-run confirmed result.
 
 Passive `ingest` starts no agent, Docker container, or verifier. It incrementally processes stable Codex exec JSONL and a separately versioned observed desktop-rollout format, persists metrics only, detects truncation/prefix rewrites, and fails closed on required usage drift. Rollout format v2 differs from v1 only by counting and skipping a `token_count` event when its entire `info` value is null; any non-null `info` missing `total_token_usage` still fails closed.
 
@@ -47,7 +48,7 @@ Comparisons use 10,000 task-paired bootstrap resamples, 95% confidence intervals
 
 ## 8. Replay boundaries
 
-Three boundaries are distinct: deterministic environment replay, deterministic tool-observation replay, and scenario re-run with a live model. Matching a prompt hash detects divergence; it does not imply identical stochastic output. Full replay work remains beyond the v0.2 public release.
+Three boundaries are distinct: deterministic environment replay, deterministic tool-observation replay, and scenario re-run with a live model. Matching a prompt hash detects divergence; it does not imply identical stochastic output. Full replay work remains beyond the v0.3 public release.
 
 ## 9. Public positioning (frozen)
 

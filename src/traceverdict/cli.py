@@ -15,8 +15,14 @@ app = typer.Typer(
 )
 baseline_app = typer.Typer(help="Manage cached Daily Mode baselines.", no_args_is_help=True)
 app.add_typer(baseline_app, name="baseline")
+radar_app = typer.Typer(help="Run one-shot scheduled regression radar operations.", no_args_is_help=True)
+radar_baseline_app = typer.Typer(help="Manage frozen Radar reference windows.", no_args_is_help=True)
+radar_budget_app = typer.Typer(help="Manage Radar API-spend ledgers.", no_args_is_help=True)
+radar_app.add_typer(radar_baseline_app, name="baseline")
+radar_app.add_typer(radar_budget_app, name="budget")
+app.add_typer(radar_app, name="radar")
 
-_UNIMPLEMENTED = "Not implemented in v0.2"
+_UNIMPLEMENTED = "Not implemented in v0.3"
 
 
 def _not_implemented() -> None:
@@ -211,14 +217,15 @@ def _ingest_echo(result: dict, as_json: bool) -> None:
 def quick(
     set_values: list[str] = typer.Option([], "--set", help="model=<id> or model_params.x=<JSON scalar>"),
     prompt_file: Optional[Path] = typer.Option(None, "--prompt-file"),
-    full: bool = typer.Option(False, "--full", help="Run frozen S1-S8 instead of S1/S4/S6"),
+    full: bool = typer.Option(False, "--full", help="Run frozen S1-S11 instead of S1/S4/S6"),
     base_config: Path = typer.Option(Path("configs/dev.yaml"), "--base-config"),
     name: str = typer.Option("default", "--name"),
     json_output: bool = typer.Option(False, "--json"),
     state_dir: Path = typer.Option(Path(".traceverdict/daily"), "--state-dir", hidden=True),
+    confirm: bool = typer.Option(False, "--confirm", help="Re-run only signalled tasks twice and decide by three-run evidence"),
 ) -> None:
     """Derive an immutable config and compare the candidate with a cached baseline."""
-    from traceverdict.daily import DailyError, DailyFailure, DailyPaths, derive_config, run_quick
+    from traceverdict.daily import DailyError, DailyFailure, DailyPaths, confirm_daily, derive_config, run_quick
     from traceverdict.resources import resolve_daily_assets
 
     paths = DailyPaths.at(state_dir)
@@ -234,6 +241,15 @@ def quick(
             config_path, full=full, name=name, paths=paths,
             tasks_root=assets.tasks_self,
         )
+        if confirm and result["conclusion"] in {"WARN", "FAIL"}:
+            result["confirmation"] = confirm_daily(
+                config_path,
+                baseline_id=result["baseline_config_id"],
+                candidate_id=result["candidate_config_id"],
+                signal_tasks=result["signal_tasks"],
+                paths=paths,
+                tasks_root=assets.tasks_self,
+            )
     except DailyFailure as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(code=1) from exc
@@ -241,7 +257,9 @@ def quick(
         typer.echo(str(exc), err=True)
         raise typer.Exit(code=2) from exc
     _daily_echo(result, json_output)
-    if result["conclusion"] == "FAIL":
+    if confirm and result.get("confirmation", {}).get("level") == "confirmed":
+        raise typer.Exit(code=1)
+    if result["conclusion"] == "FAIL" and not confirm:
         raise typer.Exit(code=1)
 
 
@@ -309,6 +327,109 @@ def ingest(
         typer.echo(str(exc), err=True)
         raise typer.Exit(code=2) from exc
     _ingest_echo(result, json_output)
+
+
+def _radar_paths(value: Path):
+    from traceverdict.radar import RadarPaths
+    return RadarPaths.at(value)
+
+
+def _radar_guard(call):
+    from traceverdict.radar import RadarBudgetPause, RadarError
+    from traceverdict.daily import DailyFailure
+    try:
+        return call()
+    except (RadarError, RadarBudgetPause, DailyFailure) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=2) from exc
+
+
+@radar_app.command("add")
+def radar_add(
+    config: Path = typer.Option(..., "--config"),
+    set_name: str = typer.Option(..., "--set-name"),
+    state_dir: Path = typer.Option(Path(".traceverdict/radar"), "--state-dir", hidden=True),
+) -> None:
+    """Register one immutable derived config for quick or full monitoring."""
+    from traceverdict.radar import add_watch
+    typer.echo(json.dumps(_radar_guard(lambda: add_watch(config, set_name=set_name, paths=_radar_paths(state_dir))), indent=2))
+
+
+@radar_app.command("tick")
+def radar_tick(
+    only: Optional[str] = typer.Option(None, "--only"),
+    json_output: bool = typer.Option(False, "--json"),
+    state_dir: Path = typer.Option(Path(".traceverdict/radar"), "--state-dir", hidden=True),
+) -> None:
+    """Execute one scheduled monitoring round; OS scheduling remains external."""
+    from traceverdict.radar import tick
+    from traceverdict.resources import resolve_daily_assets
+    result = _radar_guard(lambda: tick(only=only, paths=_radar_paths(state_dir), tasks_root=resolve_daily_assets().tasks_self))
+    _daily_echo(result, json_output)
+    if result["level"] == "signal":
+        raise typer.Exit(code=3)
+
+
+@radar_app.command("confirm")
+def radar_confirm(
+    signal_id: str = typer.Argument(...),
+    json_output: bool = typer.Option(False, "--json"),
+    state_dir: Path = typer.Option(Path(".traceverdict/radar"), "--state-dir", hidden=True),
+) -> None:
+    """Re-run only signal tasks twice; confirmed WARN and FAIL both exit 1."""
+    from traceverdict.radar import confirm
+    from traceverdict.resources import resolve_daily_assets
+    result = _radar_guard(lambda: confirm(signal_id, paths=_radar_paths(state_dir), tasks_root=resolve_daily_assets().tasks_self))
+    typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
+    if result["level"] == "confirmed":
+        raise typer.Exit(code=1)
+
+
+@radar_app.command("report")
+def radar_report(
+    days: int = typer.Option(7, "--days"),
+    json_output: bool = typer.Option(False, "--json"),
+    state_dir: Path = typer.Option(Path(".traceverdict/radar"), "--state-dir", hidden=True),
+) -> None:
+    """Show recent monitoring time series, signals, confirmations, and spend."""
+    from traceverdict.radar import report
+    result = _radar_guard(lambda: report(days=days, paths=_radar_paths(state_dir)))
+    if json_output:
+        typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
+    else:
+        from rich.console import Console
+        from rich.table import Table
+        table = Table(title=f"TraceVerdict Radar — last {days} days")
+        for column in ("tick", "config", "rep", "pass", "tokens med", "wall p95", "level", "cost USD"):
+            table.add_column(column)
+        for item in result["ticks"]:
+            table.add_row(
+                item["tick_id"], item["name"], str(item["repetition_idx"]),
+                f"{item['pass_rate']:.3f}", str(item["median_tokens"]),
+                f"{item['p95_wall_s']:.2f}", item["level"], f"{item['cost_usd']:.8f}",
+            )
+        Console().print(table)
+        typer.echo(f"signals={len(result['signals'])} month=${result['monthly_actual_usd']:.6f}/${result['monthly_limit_usd']:.2f} project=${result['project_actual_usd']:.6f}/$28")
+
+
+@radar_baseline_app.command("set")
+def radar_baseline_set(
+    name: str = typer.Option(..., "--name"),
+    tick_id: Optional[str] = typer.Option(None, "--tick-id"),
+    state_dir: Path = typer.Option(Path(".traceverdict/radar"), "--state-dir", hidden=True),
+) -> None:
+    from traceverdict.radar import set_baseline
+    typer.echo(json.dumps(_radar_guard(lambda: set_baseline(name=name, tick_id=tick_id, paths=_radar_paths(state_dir))), indent=2))
+
+
+@radar_budget_app.command("set")
+def radar_budget_set(
+    project_actual_usd: float = typer.Option(..., "--project-actual-usd"),
+    monthly_limit_usd: float = typer.Option(3.0, "--monthly-limit-usd"),
+    state_dir: Path = typer.Option(Path(".traceverdict/radar"), "--state-dir", hidden=True),
+) -> None:
+    from traceverdict.radar import set_budget
+    typer.echo(json.dumps(_radar_guard(lambda: set_budget(project_actual_usd=project_actual_usd, monthly_limit_usd=monthly_limit_usd, paths=_radar_paths(state_dir))), indent=2))
 
 
 if __name__ == "__main__":
