@@ -119,7 +119,9 @@ The first tick becomes the default reference window; `tv radar baseline set --na
 - Windows Task Scheduler: run `tv radar tick` at the desired interval with the project directory as “Start in”.
 - cron: `0 9 * * * cd /path/to/project && tv radar tick`.
 
-Exit codes are contractual:
+### Radar exit-code matrix
+
+These exit codes are a public CLI contract for schedulers and notification hooks:
 
 | Result | Severity | Exit |
 |---|---:|---:|
@@ -127,6 +129,9 @@ Exit codes are contractual:
 | confirmed WARN or confirmed FAIL | confirmed | 1 |
 | configuration, integrity, or budget pause | error | 2 |
 | one-tick WARN or FAIL awaiting confirmation | signal | 3 |
+
+Both confirmed WARN and confirmed FAIL exit `1`; the code represents a confirmed
+regression, while the report preserves whether its severity is WARN or FAIL.
 
 `tv quick --confirm` uses the same targeted confirmation engine: only signalled tasks receive two additional runs; the original plus those runs form the three-run decision. A confirmed efficiency WARN exits 1 just like a confirmed correctness FAIL.
 

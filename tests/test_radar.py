@@ -137,3 +137,9 @@ def test_cli_exit_matrix_is_explicit(monkeypatch, tmp_path: Path) -> None:
     monkeypatch.setattr("traceverdict.radar.confirm", lambda *a, **k: {"level":"withdrawn"})
     result = runner.invoke(app, ["radar","confirm","signal-x","--state-dir",str(tmp_path)])
     assert result.exit_code == 0
+    monkeypatch.setattr(
+        "traceverdict.radar.tick",
+        lambda **k: (_ for _ in ()).throw(RadarError("contract error")),
+    )
+    result = runner.invoke(app, ["radar","tick","--state-dir",str(tmp_path)])
+    assert result.exit_code == 2

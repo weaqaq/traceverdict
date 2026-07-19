@@ -71,6 +71,20 @@ def test_radar_help_and_exit_contract() -> None:
         assert name in result.stdout
 
 
+def test_readme_locks_radar_exit_code_matrix() -> None:
+    readme = Path("README.md").read_text(encoding="utf-8")
+    assert "### Radar exit-code matrix" in readme
+    expected_rows = (
+        "| clean or withdrawn after confirmation | none | 0 |",
+        "| confirmed WARN or confirmed FAIL | confirmed | 1 |",
+        "| configuration, integrity, or budget pause | error | 2 |",
+        "| one-tick WARN or FAIL awaiting confirmation | signal | 3 |",
+    )
+    for row in expected_rows:
+        assert row in readme
+    assert "Both confirmed WARN and confirmed FAIL exit `1`" in readme
+
+
 def test_ingest_json_and_rich_disclose_heartbeat_counts(tmp_path: Path) -> None:
     source = tmp_path / "rollout.jsonl"
     source.write_text(json.dumps({
