@@ -1,0 +1,26 @@
+id: S11
+suite: self
+source: public_head_rollback
+repo_ref: repo.bundle
+base_commit: 0479e0a3e7699da189705324034ff143399895fd
+image_ref: "traceverdict/self-base:py3.12-v1"
+instruction: Restore strict MiMo reasoning/text partition pricing so both frozen real datasets reconstruct exactly.
+budget:
+  max_steps: 30
+  max_tokens: 100000
+  max_wall_s: 600
+  max_cost_usd: 1.0
+forbidden_paths:
+  - tests/test_case.py
+  - tests/fixtures/mimo_usage.json
+gt:
+  type: pytest
+  spec:
+    fail_to_pass:
+      - "tests/test_case.py::test_two_real_datasets_reconstruct_with_one_partition_rule"
+    pass_to_pass:
+      - "tests/test_case.py::test_reasoning_and_text_share_official_output_rate"
+tags:
+  - f5
+  - rollback_constructed
+  - strict_cost

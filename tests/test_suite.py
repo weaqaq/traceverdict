@@ -11,11 +11,11 @@ from traceverdict.snapshot.workspace import cleanup_work_copy, materialize_work_
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_self_suite_dry_run_lists_exactly_eight_tasks():
+def test_self_suite_dry_run_lists_exactly_eleven_tasks():
     result = validate_suite(
         ROOT / "tasks" / "self", ROOT / "configs" / "dev.yaml", ensure_image=False
     )
-    assert result["count"] == 8
+    assert result["count"] == 11
     assert tuple(task["id"] for task in result["tasks"]) == EXPECTED_SELF_IDS
     assert {task["image_ref"] for task in result["tasks"]} == {
         "traceverdict/self-base:py3.12-v1"

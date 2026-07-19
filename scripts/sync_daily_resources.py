@@ -23,7 +23,7 @@ FILES = (
     "tasks/self/_image/SWEAgentV3.Dockerfile",
     *(
         f"tasks/self/S{index}/{name}"
-        for index in range(1, 9)
+        for index in range(1, 12)
         for name in ("BASE_COMMIT.txt", "repo.bundle", "task.yaml", "verify/README.md")
     ),
 )

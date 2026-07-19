@@ -11,7 +11,7 @@ from traceverdict.core.task_loader import load_task
 from traceverdict.snapshot.image import require_docker
 from traceverdict.snapshot.suite_image import ensure_suite_image, find_suite_image_dir
 
-EXPECTED_SELF_IDS = tuple(f"S{i}" for i in range(1, 9))
+EXPECTED_SELF_IDS = tuple(f"S{i}" for i in range(1, 12))
 SELF_IMAGE_REF = "traceverdict/self-base:py3.12-v1"
 
 
@@ -27,7 +27,7 @@ def validate_suite(
     cfg = load_config(config_spec)
     task_dirs = sorted(
         (p for p in suite_dir.iterdir() if p.is_dir() and (p / "task.yaml").is_file()),
-        key=lambda p: p.name,
+        key=lambda p: int(p.name[1:]),
     )
     ids = tuple(p.name for p in task_dirs)
     if ids != EXPECTED_SELF_IDS:

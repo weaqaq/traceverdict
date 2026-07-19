@@ -1,0 +1,25 @@
+id: S10
+suite: self
+source: public_head_rollback
+repo_ref: repo.bundle
+base_commit: 79100ace2e722b150e1af1fd22719f83c466f5cb
+image_ref: "traceverdict/self-base:py3.12-v1"
+instruction: Prevent open-turn counts from becoming negative and retain a content-free diagnostic.
+budget:
+  max_steps: 30
+  max_tokens: 100000
+  max_wall_s: 600
+  max_cost_usd: 1.0
+forbidden_paths:
+  - tests/
+gt:
+  type: pytest
+  spec:
+    fail_to_pass:
+      - "tests/test_case.py::test_unmatched_close_is_clamped_and_diagnosed"
+    pass_to_pass:
+      - "tests/test_case.py::test_balanced_open_close_remains_zero"
+tags:
+  - uf2
+  - rollback_constructed
+  - counter_invariant
