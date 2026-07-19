@@ -63,6 +63,29 @@ def test_rollout_usage_and_open_turn(tmp_path: Path) -> None:
     assert "private" not in metrics.read_text()
 
 
+def test_open_underflow_is_clamped_and_records_only_hash_and_offset(tmp_path: Path) -> None:
+    source = tmp_path / "rollout.jsonl"
+    opened = _line({
+        "timestamp": "2026-07-18T00:00:00Z", "type": "event_msg",
+        "payload": {"type": "task_started", "turn_id": "one"},
+    })
+    source.write_bytes(opened)
+    state, metrics = tmp_path / "state.json", tmp_path / "metrics.json"
+    ingest([source], state_path=state, metrics_path=metrics)
+    source.write_bytes(opened + _line({
+        "timestamp": "2026-07-19T00:00:00Z", "type": "event_msg",
+        "payload": {"type": "task_complete", "turn_id": "one"},
+    }))
+    result = ingest([source], state_path=state, metrics_path=metrics)
+    assert result["added"]["open_turns"] == 0
+    stored = json.loads(state.read_text("utf-8"))
+    diagnostic = stored["diagnostics"][0]
+    assert diagnostic["kind"] == "open_turn_underflow"
+    assert len(diagnostic["source_sha256"]) == 64
+    assert diagnostic["offset"] == source.stat().st_size
+    assert str(source) not in state.read_text("utf-8")
+
+
 def test_rollout_usage_shape_drift_is_rejected(tmp_path: Path) -> None:
     source = tmp_path / "bad.jsonl"
     source.write_bytes(_line({"timestamp": "2026-07-18", "type": "event_msg", "payload": {"type": "token_count", "info": {}}}))

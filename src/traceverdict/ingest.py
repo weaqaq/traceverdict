@@ -206,6 +206,7 @@ def ingest(paths: Iterable[str | Path] | None, *, state_path: str | Path, metric
     metrics = _read_json(metrics_file, {"version": STATE_VERSION, "days": {}})
     if state.get("version") != STATE_VERSION or metrics.get("version") != STATE_VERSION:
         raise IngestError("unsupported ingest state version")
+    state.setdefault("diagnostics", [])
     added = _blank(datetime.now(timezone.utc).date().isoformat(), "mixed")
     processed = 0
     for path in _source_files(paths):
@@ -238,6 +239,13 @@ def ingest(paths: Iterable[str | Path] | None, *, state_path: str | Path, metric
                 source_model = delta["model"]
             key = _record_key(delta["date_utc"], delta["model"])
             day = metrics["days"].setdefault(key, _blank(delta["date_utc"], delta["model"]))
+            if int(day.get("open_turns", 0)) + int(delta.get("open_turns", 0)) < 0:
+                state["diagnostics"].append({
+                    "kind": "open_turn_underflow",
+                    "source_sha256": source_id,
+                    "offset": consumed,
+                })
+                delta["open_turns"] = -int(day.get("open_turns", 0))
             _merge(day, delta)
             _merge(added, delta)
 
