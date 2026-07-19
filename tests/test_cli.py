@@ -62,12 +62,13 @@ def test_daily_help_contract() -> None:
     assert "set" in result.stdout and "update" in result.stdout
 
 
-def test_baseline_set_uses_packaged_default_when_checkout_path_is_absent() -> None:
+def test_baseline_set_uses_packaged_default_when_checkout_path_is_absent(
+    tmp_path, monkeypatch
+) -> None:
     from traceverdict.resources import resolve_daily_assets
 
-    with runner.isolated_filesystem(), patch(
-        "traceverdict.daily.set_baseline", return_value={"ok": True}
-    ) as mocked:
+    monkeypatch.chdir(tmp_path)
+    with patch("traceverdict.daily.set_baseline", return_value={"ok": True}) as mocked:
         result = runner.invoke(
             app, ["baseline", "set", "--config", "configs/dev.yaml"]
         )
