@@ -168,3 +168,41 @@ def test_quick_to_full_reuses_three_completions_and_runs_only_five(tmp_path: Pat
     assert second["reused"] == list(QUICK_TASKS)
     assert second["new"] == ["S2", "S3", "S5", "S7", "S8"]
     assert len(calls) == 8
+
+
+def test_default_daily_runner_cleans_only_its_new_mini_containers(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    base, _ = _base(tmp_path)
+    paths = DailyPaths.at(tmp_path / "state")
+    removed: list[tuple[str, set[str]]] = []
+
+    def runner(task_path, config_path, *, db_path, artifacts_dir, repetition_idx):
+        task_id = Path(task_path).name
+        conn = dbmod._connect(db_path) if Path(db_path).exists() else dbmod.init_db(db_path)
+        cfg = load_path(config_path)
+        if conn.execute("SELECT COUNT(*) FROM config WHERE config_id=?", (cfg["config_id"],)).fetchone()[0] == 0:
+            _insert_config(conn, cfg["config_id"])
+        if conn.execute("SELECT COUNT(*) FROM task WHERE task_id=?", (task_id,)).fetchone()[0] == 0:
+            _insert_task(conn, task_id)
+        _insert_run(conn, cfg["config_id"], task_id, True, False, 100, 10)
+        conn.commit()
+        conn.close()
+        return {"run_id": f"{cfg['config_id']}-{task_id}", "status": "ok"}
+
+    monkeypatch.setattr("traceverdict.core.runner.run_task", runner)
+    monkeypatch.setattr("traceverdict.daily._mini_container_ids", lambda docker: {"older"})
+    monkeypatch.setattr(
+        "traceverdict.daily._cleanup_new_mini_containers",
+        lambda docker, before: removed.append((docker, before)),
+    )
+
+    execute_scope(
+        base,
+        full=False,
+        paths=paths,
+        verifier=lambda conn, run_id, task_path: [],
+        tasks_root=tmp_path / "tasks",
+    )
+
+    assert removed == [("docker", {"older"})] * len(QUICK_TASKS)

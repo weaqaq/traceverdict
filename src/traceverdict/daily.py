@@ -6,6 +6,7 @@ import hashlib
 import json
 import math
 import sqlite3
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 from statistics import median
@@ -218,6 +219,36 @@ def _valid_completion(row: sqlite3.Row) -> bool:
     )
 
 
+def _mini_container_ids(docker_executable: str) -> set[str]:
+    """Return running mini-swe-agent containers without touching older runs."""
+    proc = subprocess.run(
+        [docker_executable, "ps", "-q", "--filter", "name=minisweagent-"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        raise DailyFailure(f"failed to list mini-swe-agent containers: {proc.stderr.strip()}")
+    return {line.strip() for line in proc.stdout.splitlines() if line.strip()}
+
+
+def _cleanup_new_mini_containers(docker_executable: str, before: set[str]) -> None:
+    """Remove only mini-swe-agent containers created by the current Daily run."""
+    created = sorted(_mini_container_ids(docker_executable) - before)
+    if not created:
+        return
+    proc = subprocess.run(
+        [docker_executable, "rm", "-f", *created],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        raise DailyFailure(
+            f"failed to clean mini-swe-agent containers {created}: {proc.stderr.strip()}"
+        )
+
+
 def execute_scope(
     config_path: str | Path,
     *,
@@ -229,10 +260,12 @@ def execute_scope(
 ) -> dict[str, Any]:
     from traceverdict.core.runner import run_task
 
+    uses_default_runner = runner is None
     runner = runner or run_task
     verifier = verifier or verify_run
     paths.ensure()
     cfg = load_config(config_path)
+    docker_executable = str(cfg.get("docker_executable", "docker"))
     task_ids = _task_ids(full)
     conn = _connect(paths.db)
     reused: list[str] = []
@@ -252,13 +285,20 @@ def execute_scope(
                     verifier(conn, row["run_id"], Path(tasks_root) / task_id)
                 reused.append(task_id)
                 continue
-            result = runner(
-                Path(tasks_root) / task_id,
-                config_path,
-                db_path=paths.db,
-                artifacts_dir=paths.artifacts,
-                repetition_idx=0,
+            before_containers = (
+                _mini_container_ids(docker_executable) if uses_default_runner else set()
             )
+            try:
+                result = runner(
+                    Path(tasks_root) / task_id,
+                    config_path,
+                    db_path=paths.db,
+                    artifacts_dir=paths.artifacts,
+                    repetition_idx=0,
+                )
+            finally:
+                if uses_default_runner:
+                    _cleanup_new_mini_containers(docker_executable, before_containers)
             if result.get("status") == "harness_error":
                 raise DailyFailure(f"harness error on {task_id}: {result.get('error') or result.get('exit_reason')}")
             conn.close()
